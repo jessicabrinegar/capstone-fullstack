@@ -15,6 +15,7 @@ const getState = ({ getStore, getActions, setStore }) => {
         },
       ],
       user: null,
+      token: null,
     },
     actions: {
       // Use getActions to call a function within a fuction
@@ -103,7 +104,14 @@ const getState = ({ getStore, getActions, setStore }) => {
         }
       },
       logout: async () => {
+        localStorage.removeItem("token");
         console.log("logout action called!");
+      },
+      syncTokenFromSessionStore: () => {
+        const token = localStorage.getItem("token");
+        if (token && token != "" && token != undefined) {
+          setStore({ token: token });
+        }
       },
       getMessage: async () => {
         try {
