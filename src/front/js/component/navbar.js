@@ -1,14 +1,26 @@
-import React from "react";
+import React, { useContext, useState } from "react";
 import { Link, Outlet } from "react-router-dom";
+import { Context } from "../store/appContext";
+import { useNavigate } from "react-router-dom";
 
 export const Navbar = () => {
+  const { store, actions } = useContext(Context);
+
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    actions.logout().then(() => {
+      navigate("/");
+    });
+  };
+
   return (
     <nav className="navbar navbar-light bg-light">
       <div className="container">
         <Link to="/">
           <span className="navbar-brand mb-0 h1">N3</span>
         </Link>
-        {/* Conditionally render MyFeed & Collab buttons based on if user is logged in */}
+        {/* Conditionally render buttons based on if user is logged in or not */}
         <div className="ml-auto">
           <Link to="/myfeed">
             <button className="navbar-toggler ms-3" type="button">
@@ -27,6 +39,11 @@ export const Navbar = () => {
           </Link>
           <Link to="/register">
             <button className="btn btn-primary">Register</button>
+          </Link>
+          <Link to="/login">
+            <button className="btn btn-primary" onClick={handleLogout}>
+              Logout
+            </button>
           </Link>
         </div>
         <Outlet></Outlet>

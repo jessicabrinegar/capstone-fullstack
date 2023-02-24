@@ -14,13 +14,97 @@ const getState = ({ getStore, getActions, setStore }) => {
           initial: "white",
         },
       ],
+      user: null,
     },
     actions: {
       // Use getActions to call a function within a fuction
       exampleFunction: () => {
         getActions().changeColor(0, "green");
       },
-
+      register: async (
+        firstname,
+        lastname,
+        username,
+        email,
+        fieldOfStudy,
+        university,
+        userType,
+        password
+      ) => {
+        const opts = {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            firstname: firstname,
+            lastname: lastname,
+            username: username,
+            email: email,
+            fieldOfStudy: fieldOfStudy,
+            university: university,
+            userType: userType,
+            password: password,
+          }),
+        };
+        try {
+          const resp = await fetch(
+            "https://3001-jessicabrin-capstoneful-tkbqih5kbhg.ws-us88.gitpod.io/api/register",
+            opts
+          );
+          if (resp.status !== 200) {
+            alert("There has been an error.");
+            return false;
+          }
+          const data = await resp.json();
+          console.log("Data from the backend: ", data);
+          setStore({
+            user: {
+              firstname: firstname,
+              lastname: lastname,
+              username: username,
+              email: email,
+              fieldOfStudy: fieldOfStudy,
+              university: university,
+              userType: userType,
+              password: password,
+            },
+          });
+        } catch (error) {
+          console.error("There has been an error logging in.");
+        }
+      },
+      login: async (username, password) => {
+        const opts = {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            username: username,
+            password: password,
+          }),
+        };
+        try {
+          const resp = await fetch(
+            "https://3001-jessicabrin-capstoneful-tkbqih5kbhg.ws-us88.gitpod.io/api/token",
+            opts
+          );
+          if (resp.status !== 200) {
+            alert("There has been an error.");
+            return false;
+          }
+          const data = await resp.json();
+          console.log("Data from the backend: ", data);
+          localStorage.setItem("token", data.access_token);
+          setStore({ token: data.access_token });
+        } catch (error) {
+          console.error("There has been an error logging in.");
+        }
+      },
+      logout: async () => {
+        console.log("logout action called!");
+      },
       getMessage: async () => {
         try {
           // fetching data from the backend

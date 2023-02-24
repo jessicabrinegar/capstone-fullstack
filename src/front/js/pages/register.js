@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { Context } from "../store/appContext";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useNavigate } from "react-router-dom";
 
 // will likely want to put all this info in the store instead so it can be used in other pages
 export const Register = () => {
@@ -16,6 +17,8 @@ export const Register = () => {
   const [userType, setUserType] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+
+  const navigate = useNavigate();
 
   const schema = yup.object().shape({
     firstname: yup.string().required(),
@@ -33,13 +36,26 @@ export const Register = () => {
   });
 
   const { store, actions } = useContext(Context);
+
   const { register, handleSubmit } = useForm({
     resolver: yupResolver(schema),
   });
 
   const onSubmit = (data) => {
     console.log(data);
-    // actions.register(data.email...);
+    actions.register(
+      data.firstname,
+      data.lastname,
+      data.username,
+      data.email,
+      data.fieldOfStudy,
+      data.university,
+      data.userType,
+      data.password
+    );
+    // .then(() => {
+    //   navigate("/login");
+    // });
   };
 
   return (

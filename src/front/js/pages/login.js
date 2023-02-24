@@ -1,34 +1,28 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
+// import { useHistory } from "react-router-dom";
 import { Context } from "../store/appContext";
 import "../../styles/home.css";
+import { useNavigate } from "react-router-dom";
 
 export const Login = () => {
   const { store, actions } = useContext(Context);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
+  // const token = localStorage.getItem("token");
+
+  // const history = useHistory();
+  const navigate = useNavigate();
+
   const handleClick = () => {
-    const opts = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        username: username,
-        password: password,
-      }),
-    };
-    fetch(
-      "https://3001-jessicabrin-capstoneful-tkbqih5kbhg.ws-us88.gitpod.io/api/token",
-      opts
-    )
-      .then((resp) => {
-        if (resp.status == 200) return resp.json();
-        else alert("There has been an error.");
-      })
-      .then()
-      .catch((error) => console.error("There was an error", error));
+    actions.login(username, password); //.then(()=>navigate("/myfeed"))
   };
+
+  useEffect(() => {
+    if (store.token && store.token != "" && store.token != undefined) {
+      navigate("/myfeed");
+    }
+  }, [store.token]);
 
   return (
     <div className="text-center mt-5">
