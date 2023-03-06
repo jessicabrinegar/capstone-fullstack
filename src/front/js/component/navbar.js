@@ -24,7 +24,7 @@ export const Navbar = () => {
     <nav className="navbar navbar-light bg-light">
       <div className="container">
         <div className="ml-auto">
-          <div>Hello {store.user.username}</div>
+          <div>Hello {store.user.firstname}</div>
         </div>
         <div className="ml-auto">
           <Link to="/myfeed">
