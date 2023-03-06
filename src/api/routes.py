@@ -15,13 +15,14 @@ api = Blueprint('api', __name__)
 #   *** JWT auth during login.. how to ensure username/password matches ***
 
 # Routes needed (YAN):
-#   PUT, DELETE User
-#   PUT, DELETE Post, GET all posts, GET post by ID of author
+#   PUT User
+#   GET post by ID of author
 #   POST, GET, & DELETE Bookmark, GET all bookmarks with ID of user
 #   GET, DELETE folow_map, GET all follow_maps by follower_id
 #   GET user, posts by username?? Worried of how we will access user id from front end
 #   The backref attribute (see models) allows access to the related post from a User object using the user.posts attribute, for example
         # maybe this can be used? not sure
+
 
 # Create a route to authenticate your users and return JWTs.
 # This will happen at login
@@ -69,6 +70,15 @@ def create_user():
     db.session.commit()
     return jsonify(new_user.serialize()),200
 
+# delete a user
+@api.route('/user/<int:id>', methods=['DELETE'])
+def delete_user(id):
+    # rb = request.get_json()
+    user = User.query.get(id)
+    db.session.delete(user)
+    db.session.commit()
+    return f"User {user.id} was deleted", 200
+
 
 # get a user
 # @api.route('/user/<username>', methods=['GET'])
@@ -100,7 +110,6 @@ def create_post():
         raise APIException("User not found", 404)
     new_post = Post(
         author_id=rb["author_id"],
-        author = author,
         field_of_study=rb["field_of_study"],
         post_type=rb["post_type"],
         title=rb["title"],
@@ -109,6 +118,33 @@ def create_post():
     db.session.add(new_post)
     db.session.commit()
     return f"Post '{rb['title']}' was created", 200
+
+# update a post
+@api.route('/post/<int:id>', methods=['PUT'])
+def update_post(id):
+    post = Post.query.get(id)
+    if post is None:
+        raise APIException("Post not found", 404)
+    rb = request.get_json()
+    if "title" in rb:
+        post.title = rb["title"]
+    if "post_type" in rb:
+        post.post_type = rb["post_type"]
+    if "field_of_study" in rb:
+        post.field_of_study = rb["field_of_study"]
+    if "content" in rb:
+        post.content = rb["content"]
+    db.session.commit()
+    return jsonify(post.serialize()), 200
+
+# delete a post
+@api.route('/post/<int:id>', methods=['DELETE'])
+def delete_post(id):
+    # rb = request.get_json()
+    post = Post.query.get(id)
+    db.session.delete(post)
+    db.session.commit()
+    return f"Post {post.id} was deleted", 200
 
 
 # get a post
@@ -119,6 +155,14 @@ def get_post(id):
     if post is None:
         raise APIException("Post not found", 404)
     return jsonify(post.serialize()), 200
+
+# get all posts
+@api.route('/posts', methods=['GET'])
+def get_all_posts():
+    posts = Post.query.all()
+    # return serialized version! this ensures password is not returned
+    posts_list = list(map(lambda post: post.serialize(), posts))
+    return jsonify(posts_list), 200
 
 
 # post a follow_map

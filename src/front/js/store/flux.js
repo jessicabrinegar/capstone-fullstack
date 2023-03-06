@@ -2,11 +2,11 @@
 import { Navigate } from "react-router-dom";
 
 const registerURL =
-  "https://3001-jessicabrin-capstoneful-tkbqih5kbhg.ws-us89.gitpod.io/api/register";
+  "https://3001-jessicabrin-capstoneful-tkbqih5kbhg.ws-eu89.gitpod.io/api/register";
 const loginURL =
-  "https://3001-jessicabrin-capstoneful-tkbqih5kbhg.ws-us89.gitpod.io/api/token";
+  "https://3001-jessicabrin-capstoneful-tkbqih5kbhg.ws-eu89.gitpod.io/api/token";
 const privateURL =
-  "https://3001-jessicabrin-capstoneful-tkbqih5kbhg.ws-us89.gitpod.io/api/private";
+  "https://3001-jessicabrin-capstoneful-tkbqih5kbhg.ws-eu89.gitpod.io/api/private";
 
 const getState = ({ getStore, getActions, setStore }) => {
   return {
