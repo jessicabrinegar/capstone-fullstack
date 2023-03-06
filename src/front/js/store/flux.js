@@ -60,11 +60,8 @@ const getState = ({ getStore, getActions, setStore }) => {
           const resp = await fetch(registerURL, opts);
           const data = await resp.json();
           // this console log isnt happening
-          console.log("Data from the backend: ", data);
-          localStorage.setItem("user", opts.body);
-          setStore({
-            user: opts.body,
-          });
+          // console.log("Data from the backend: ", data);
+          localStorage.setItem("user", data);
           return data;
         } catch {
           (error) => console.log(error);
@@ -93,6 +90,7 @@ const getState = ({ getStore, getActions, setStore }) => {
           console.log("Data from the backend: ", data);
           localStorage.setItem("token", data);
           setStore({ token: data });
+          // setStore({user:...}) here
           return data;
         } catch {
           (error) => console.log(error);

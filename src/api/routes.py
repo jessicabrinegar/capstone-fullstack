@@ -66,7 +66,7 @@ def create_user():
         )
     db.session.add(new_user)
     db.session.commit()
-    return f"User {rb['username']} was created", 200
+    return jsonify(new_user.serialize()),200
 
 
 # get a user
