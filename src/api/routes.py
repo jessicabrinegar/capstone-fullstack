@@ -22,21 +22,32 @@ api = Blueprint('api', __name__)
 #   The backref attribute (see models) allows access to the related post from a User object using the user.posts attribute, for example
         # maybe this can be used? not sure
 
-# Create a route to authenticate your users and return JWTs. The
-# create_access_token() function is used to actually generate the JWT.
+# Create a route to authenticate your users and return JWTs.
+# This will happen at login
 @api.route("/token", methods=["POST"])
 def create_token():
-    username = request.json.get("username", None)
-    password = request.json.get("password", None)
-    if username != "test" or password != "test":
-        return jsonify({"msg": "Bad username or password"}), 401
+    body = request.get_json(force=True)
+    user = db.session.query(User).filter(User.username == body['username']).first()
+    # if the username provided does not match a user in the database
+    if user == None:
+        return jsonify('Error: User does not exist.'), 401
+    # if the provided username & password are correct, create the access token
+    elif user.password == body['password'] and user.username == body['username']:
+        access_token = create_access_token(identity={'id': user.id})
+        return jsonify(access_token), 200
+    # if the user does exist but the provided password was incorrect
+    else:
+        return jsonify(f'Error: Incorrect password was given for user: {user.username}.'), 401
 
-    access_token = create_access_token(identity=username)
-    return jsonify(access_token=access_token), 200
 
+# @api.route('/private',methods=["GET"])
+# @jwt_required()
+# def private():
+#     user_token=get_jwt_identity()
+#     user=User.query.get(user_token)
+#     return jsonify(user.serialize()),200
 
 # post (register) a new user
-# NEED TO CREATE TOKEN HERE
 @api.route('/register', methods=['POST'])
 def create_user():
     rb = request.get_json()

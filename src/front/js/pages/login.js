@@ -11,18 +11,21 @@ export const Login = () => {
 
   // const token = localStorage.getItem("token");
 
-  // const history = useHistory();
   const navigate = useNavigate();
 
-  const handleClick = () => {
-    actions.login(username, password); //.then(()=>navigate("/myfeed"))
+  const handleLogin = () => {
+    actions.login(username, password).then(() => navigate("/myfeed"));
+    setUsername("");
+    setPassword("");
   };
 
-  useEffect(() => {
-    if (store.token && store.token != "" && store.token != undefined) {
-      navigate("/myfeed");
-    }
-  }, [store.token]);
+  // useEffect(() => {
+  //   if (store.token && store.token != "" && store.token != undefined) {
+  //     navigate("/myfeed");
+  //   } else {
+  //     navigate("/login");
+  //   }
+  // }, [store.token]);
 
   return (
     <div className="text-center mt-5">
@@ -32,7 +35,7 @@ export const Login = () => {
           type="text"
           placeholder="Username"
           value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          onChange={(e) => setUsername(e.target.value.toLowerCase())}
         ></input>
         <input
           type="password"
@@ -40,7 +43,7 @@ export const Login = () => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         ></input>
-        <button onClick={handleClick}>Login</button>
+        <button onClick={handleLogin}>Login</button>
       </div>
     </div>
   );

@@ -43,19 +43,22 @@ export const Register = () => {
 
   const onSubmit = (data) => {
     console.log(data);
-    actions.register(
-      data.firstname,
-      data.lastname,
-      data.username,
-      data.email,
-      data.fieldOfStudy,
-      data.university,
-      data.userType,
-      data.password
-    );
-    // .then(() => {
-    //   navigate("/login");
-    // });
+    actions
+      .register(
+        data.firstname,
+        data.lastname,
+        data.username,
+        data.email,
+        data.fieldOfStudy,
+        data.university,
+        data.userType,
+        data.password
+      )
+      .then(() => {
+        navigate("/login");
+        // this returns null
+        console.log(store.user);
+      });
   };
 
   return (

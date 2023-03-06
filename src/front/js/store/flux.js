@@ -1,3 +1,10 @@
+import { Navigate } from "react-router-dom";
+
+const registerURL =
+  "https://3001-jessicabrin-capstoneful-tkbqih5kbhg.ws-us89.gitpod.io/api/register";
+const loginURL =
+  "https://3001-jessicabrin-capstoneful-tkbqih5kbhg.ws-us89.gitpod.io/api/token";
+
 const getState = ({ getStore, getActions, setStore }) => {
   return {
     store: {
@@ -22,6 +29,7 @@ const getState = ({ getStore, getActions, setStore }) => {
       exampleFunction: () => {
         getActions().changeColor(0, "green");
       },
+
       register: async (
         firstname,
         lastname,
@@ -42,44 +50,33 @@ const getState = ({ getStore, getActions, setStore }) => {
             lastname: lastname,
             username: username,
             email: email,
-            fieldOfStudy: fieldOfStudy,
+            field_of_study: fieldOfStudy,
             university: university,
-            userType: userType,
+            user_type: userType,
             password: password,
           }),
         };
         try {
-          const resp = await fetch(
-            "https://3001-jessicabrin-capstoneful-tkbqih5kbhg.ws-us88.gitpod.io/api/register",
-            opts
-          );
-          if (resp.status !== 200) {
-            alert("There has been an error.");
-            return false;
-          }
+          const resp = await fetch(registerURL, opts);
           const data = await resp.json();
+          // this console log isnt happening
           console.log("Data from the backend: ", data);
+          localStorage.setItem("user", opts.body);
           setStore({
-            user: {
-              firstname: firstname,
-              lastname: lastname,
-              username: username,
-              email: email,
-              fieldOfStudy: fieldOfStudy,
-              university: university,
-              userType: userType,
-              password: password,
-            },
+            user: opts.body,
           });
-        } catch (error) {
-          console.error("There has been an error logging in.");
+          return data;
+        } catch {
+          (error) => console.log(error);
         }
       },
+
       login: async (username, password) => {
         const opts = {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
           },
           body: JSON.stringify({
             username: username,
@@ -87,32 +84,40 @@ const getState = ({ getStore, getActions, setStore }) => {
           }),
         };
         try {
-          const resp = await fetch(
-            "https://3001-jessicabrin-capstoneful-tkbqih5kbhg.ws-us88.gitpod.io/api/token",
-            opts
-          );
+          const resp = await fetch(loginURL, opts);
           if (resp.status !== 200) {
             alert("There has been an error.");
             return false;
           }
           const data = await resp.json();
           console.log("Data from the backend: ", data);
-          localStorage.setItem("token", data.access_token);
-          setStore({ token: data.access_token });
-        } catch (error) {
-          console.error("There has been an error logging in.");
+          localStorage.setItem("token", data);
+          setStore({ token: data });
+          return data;
+        } catch {
+          (error) => console.log(error);
         }
       },
+
       logout: async () => {
         localStorage.removeItem("token");
         console.log("logout action called!");
       },
-      syncTokenFromSessionStore: () => {
+
+      syncTokenFromLocalStore: () => {
         const token = localStorage.getItem("token");
         if (token && token != "" && token != undefined) {
           setStore({ token: token });
         }
       },
+
+      syncUserFromLocalStore: () => {
+        const user = localStorage.getItem("user");
+        if (user && user != "" && user != undefined) {
+          setStore({ user: user });
+        }
+      },
+
       getMessage: async () => {
         try {
           // fetching data from the backend
