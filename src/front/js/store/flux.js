@@ -1,9 +1,12 @@
+// import { getCacheDir } from "gh-pages";
 import { Navigate } from "react-router-dom";
 
 const registerURL =
   "https://3001-jessicabrin-capstoneful-tkbqih5kbhg.ws-us89.gitpod.io/api/register";
 const loginURL =
   "https://3001-jessicabrin-capstoneful-tkbqih5kbhg.ws-us89.gitpod.io/api/token";
+const privateURL =
+  "https://3001-jessicabrin-capstoneful-tkbqih5kbhg.ws-us89.gitpod.io/api/private";
 
 const getState = ({ getStore, getActions, setStore }) => {
   return {
@@ -59,9 +62,31 @@ const getState = ({ getStore, getActions, setStore }) => {
         try {
           const resp = await fetch(registerURL, opts);
           const data = await resp.json();
-          // this console log isnt happening
-          // console.log("Data from the backend: ", data);
-          localStorage.setItem("user", data);
+          return data;
+        } catch {
+          (error) => console.log(error);
+        }
+      },
+
+      getUser: async () => {
+        const accessToken = localStorage.getItem("token");
+        const opts = {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+            Authorization: `Bearer ${accessToken}`,
+          },
+        };
+        try {
+          const resp = await fetch(privateURL, opts);
+          if (resp.status !== 200) {
+            alert("There has been an error.");
+            return false;
+          }
+          const data = await resp.json();
+          console.log("User data from the backend: ", data);
+          setStore({ user: data });
           return data;
         } catch {
           (error) => console.log(error);
@@ -87,10 +112,9 @@ const getState = ({ getStore, getActions, setStore }) => {
             return false;
           }
           const data = await resp.json();
-          console.log("Data from the backend: ", data);
+          console.log("Token data from the backend: ", data);
           localStorage.setItem("token", data);
           setStore({ token: data });
-          // setStore({user:...}) here
           return data;
         } catch {
           (error) => console.log(error);

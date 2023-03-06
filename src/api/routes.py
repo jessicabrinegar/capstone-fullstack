@@ -10,6 +10,7 @@ from flask_jwt_extended import jwt_required
 
 api = Blueprint('api', __name__)
 
+
 #   *** hashing password during registration? need help with this ***
 #   *** JWT auth during login.. how to ensure username/password matches ***
 
@@ -33,19 +34,19 @@ def create_token():
         return jsonify('Error: User does not exist.'), 401
     # if the provided username & password are correct, create the access token
     elif user.password == body['password'] and user.username == body['username']:
-        access_token = create_access_token(identity={'id': user.id})
+        access_token = create_access_token(identity={'username': user.username})
         return jsonify(access_token), 200
     # if the user does exist but the provided password was incorrect
     else:
         return jsonify(f'Error: Incorrect password was given for user: {user.username}.'), 401
 
-
-# @api.route('/private',methods=["GET"])
-# @jwt_required()
-# def private():
-#     user_token=get_jwt_identity()
-#     user=User.query.get(user_token)
-#     return jsonify(user.serialize()),200
+@api.route('/private',methods=["GET"])
+@jwt_required()
+# @cross_origin(origins=['https://3000-jessicabrin-capstoneful-tkbqih5kbhg.ws-us89.gitpod.io'], supports_credentials=True, methods=['GET', 'OPTIONS'])
+def private():
+    user_token=get_jwt_identity()
+    user=User.query.get(user_token)
+    return jsonify(user.serialize()),200
 
 # post (register) a new user
 @api.route('/register', methods=['POST'])
@@ -70,13 +71,15 @@ def create_user():
 
 
 # get a user
-@api.route('/user/<int:id>', methods=['GET'])
-def get_user(id):
-    # put in the primary key as argument to get
-    user = User.query.get(id)
-    if user is None:
-        raise APIException("User not found", 404)
-    return jsonify(user.serialize()), 200
+# @api.route('/user/<username>', methods=['GET'])
+# def get_user(username):
+#     rb = request.get_json()
+#     # user = User.query.filter_by(username=rb['username']).first()
+#     user = db.session.query(User).filter(User.username == rb['username']).first()
+#     if user is None:
+#         raise APIException("User not found", 404)
+#     else:
+#         return jsonify(user.serialize()), 200
 
 
 # get all users

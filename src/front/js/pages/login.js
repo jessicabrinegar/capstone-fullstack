@@ -9,23 +9,20 @@ export const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  // const token = localStorage.getItem("token");
-
   const navigate = useNavigate();
 
   const handleLogin = () => {
-    actions.login(username, password).then(() => navigate("/myfeed"));
-    setUsername("");
-    setPassword("");
+    actions.login(username, password).then(() => {
+      if (store.token && store.token != "" && store.token != undefined) {
+        navigate("/myfeed");
+        actions.getUser();
+        console.log(store.user);
+      } else {
+        setUsername("");
+        setPassword("");
+      }
+    });
   };
-
-  // useEffect(() => {
-  //   if (store.token && store.token != "" && store.token != undefined) {
-  //     navigate("/myfeed");
-  //   } else {
-  //     navigate("/login");
-  //   }
-  // }, [store.token]);
 
   return (
     <div className="text-center mt-5">
