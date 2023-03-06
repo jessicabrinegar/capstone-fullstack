@@ -1,5 +1,4 @@
 import React, { useContext, useEffect, useState } from "react";
-// import { useHistory } from "react-router-dom";
 import { Context } from "../store/appContext";
 import "../../styles/home.css";
 import { useNavigate } from "react-router-dom";
@@ -15,8 +14,8 @@ export const Login = () => {
     actions.login(username, password).then(() => {
       if (store.token && store.token != "" && store.token != undefined) {
         navigate("/myfeed");
-        actions.getUser();
-        console.log(store.user);
+        // actions.getUser();
+        // console.log(store.user);
       } else {
         setUsername("");
         setPassword("");

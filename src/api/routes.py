@@ -35,12 +35,13 @@ def create_token():
         return jsonify('Error: User does not exist.'), 401
     # if the provided username & password are correct, create the access token
     elif user.password == body['password'] and user.username == body['username']:
-        access_token = create_access_token(identity={'username': user.username})
-        return jsonify(access_token), 200
+        access_token = create_access_token(identity={'id': user.id})
+        return jsonify(access_token = access_token, user=user.serialize()), 200
     # if the user does exist but the provided password was incorrect
     else:
         return jsonify(f'Error: Incorrect password was given for user: {user.username}.'), 401
 
+# get user data
 @api.route('/private',methods=["GET"])
 @jwt_required()
 # @cross_origin(origins=['https://3000-jessicabrin-capstoneful-tkbqih5kbhg.ws-us89.gitpod.io'], supports_credentials=True, methods=['GET', 'OPTIONS'])

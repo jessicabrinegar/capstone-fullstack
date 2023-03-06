@@ -24,6 +24,9 @@ export const Navbar = () => {
     <nav className="navbar navbar-light bg-light">
       <div className="container">
         <div className="ml-auto">
+          <div>Hello {store.user.username}</div>
+        </div>
+        <div className="ml-auto">
           <Link to="/myfeed">
             <button className="navbar-toggler ms-3" type="button">
               My Feed

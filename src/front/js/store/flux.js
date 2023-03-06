@@ -7,6 +7,8 @@ const loginURL =
   "https://3001-jessicabrin-capstoneful-tkbqih5kbhg.ws-eu89.gitpod.io/api/token";
 const privateURL =
   "https://3001-jessicabrin-capstoneful-tkbqih5kbhg.ws-eu89.gitpod.io/api/private";
+const postPostURL =
+  "https://3001-jessicabrin-capstoneful-tkbqih5kbhg.ws-eu89.gitpod.io/api/post";
 
 const getState = ({ getStore, getActions, setStore }) => {
   return {
@@ -112,9 +114,10 @@ const getState = ({ getStore, getActions, setStore }) => {
             return false;
           }
           const data = await resp.json();
-          console.log("Token data from the backend: ", data);
-          localStorage.setItem("token", data);
-          setStore({ token: data });
+          console.log("Data from the backend: ", data);
+          localStorage.setItem("token", data.access_token);
+          localStorage.setItem("user", data.user);
+          setStore({ token: data.access_token, user: data.user });
           return data;
         } catch {
           (error) => console.log(error);
@@ -123,6 +126,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 
       logout: async () => {
         localStorage.removeItem("token");
+        localStorage.removeItem("user");
         console.log("logout action called!");
       },
 
@@ -139,6 +143,43 @@ const getState = ({ getStore, getActions, setStore }) => {
           setStore({ user: user });
         }
       },
+
+      createPost: async (author_id, content, fieldOfStudy, postType, title) => {
+        const opts = {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+          },
+          body: JSON.stringify({
+            author_id: author_id,
+            content: content,
+            field_of_study: fieldOfStudy,
+            post_type: postType,
+            title: title,
+          }),
+        };
+        try {
+          const resp = await fetch(postPostURL, opts);
+          if (resp.status !== 200) {
+            alert("There has been an error.");
+            return false;
+          }
+          const data = await resp.json();
+          console.log("Post data from the backend: ", data);
+          // setStore({ posts: data });
+          return data;
+        } catch {
+          (error) => console.log(error);
+        }
+      },
+
+      // syncUserFromLocalStore: () => {
+      //   const user = localStorage.getItem("user");
+      //   if (user && user != "" && user != undefined) {
+      //     setStore({ user: user });
+      //   }
+      // },
 
       getMessage: async () => {
         try {
