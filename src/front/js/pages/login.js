@@ -15,7 +15,6 @@ export const Login = () => {
       if (store.token && store.token != "" && store.token != undefined) {
         navigate("/myfeed");
         // actions.getUser();
-        // console.log(store.user);
       } else {
         setUsername("");
         setPassword("");

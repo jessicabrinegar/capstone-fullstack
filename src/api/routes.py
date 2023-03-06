@@ -104,6 +104,7 @@ def get_users():
 
 # create a new post
 @api.route('/post', methods=['POST'])
+@jwt_required()
 def create_post():
     rb = request.get_json()
     author = User.query.get(rb["author_id"])

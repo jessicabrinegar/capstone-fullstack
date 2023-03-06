@@ -76,7 +76,7 @@ const getState = ({ getStore, getActions, setStore }) => {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": "*",
+            // "Access-Control-Allow-Origin": "*",
             Authorization: `Bearer ${accessToken}`,
           },
         };
@@ -88,7 +88,6 @@ const getState = ({ getStore, getActions, setStore }) => {
           }
           const data = await resp.json();
           console.log("User data from the backend: ", data);
-          setStore({ user: data });
           return data;
         } catch {
           (error) => console.log(error);
@@ -116,8 +115,11 @@ const getState = ({ getStore, getActions, setStore }) => {
           const data = await resp.json();
           console.log("Data from the backend: ", data);
           localStorage.setItem("token", data.access_token);
-          localStorage.setItem("user", data.user);
-          setStore({ token: data.access_token, user: data.user });
+          localStorage.setItem("user", JSON.stringify(data.user));
+          setStore({
+            token: data.access_token,
+            user: data.user,
+          });
           return data;
         } catch {
           (error) => console.log(error);
@@ -139,17 +141,20 @@ const getState = ({ getStore, getActions, setStore }) => {
 
       syncUserFromLocalStore: () => {
         const user = localStorage.getItem("user");
-        if (user && user != "" && user != undefined) {
-          setStore({ user: user });
+        if (user && user != "") {
+          const userData = JSON.parse(user);
+          setStore({ user: userData });
         }
       },
 
       createPost: async (author_id, content, fieldOfStudy, postType, title) => {
+        const accessToken = localStorage.getItem("token");
         const opts = {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
             "Access-Control-Allow-Origin": "*",
+            Authorization: `Bearer ${accessToken}`,
           },
           body: JSON.stringify({
             author_id: author_id,
