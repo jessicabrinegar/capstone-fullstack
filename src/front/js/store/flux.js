@@ -11,19 +11,7 @@ const emailAPI_accessKey = "BQrnUUYUa37fqdqYL2xij6WIjrhrXY2S";
 const getState = ({ getStore, getActions, setStore }) => {
   return {
     store: {
-      message: null,
-      demo: [
-        {
-          title: "FIRST",
-          background: "white",
-          initial: "white",
-        },
-        {
-          title: "SECOND",
-          background: "white",
-          initial: "white",
-        },
-      ],
+      registered: false,
       user: null,
       token: null,
     },
@@ -78,6 +66,7 @@ const getState = ({ getStore, getActions, setStore }) => {
         try {
           const resp = await fetch(registerURL, opts);
           const data = await resp.json();
+          setStore({ registered: true });
           return data;
         } catch {
           (error) => console.log(error);

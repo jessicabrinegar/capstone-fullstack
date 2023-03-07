@@ -4,7 +4,6 @@ import ScrollToTop from "./component/scrollToTop";
 
 import { Landing } from "./pages/landing";
 import { Register } from "./pages/register";
-import { Single } from "./pages/single";
 import injectContext from "./store/appContext";
 import { Login } from "./pages/login";
 
@@ -15,6 +14,7 @@ import { Collabs } from "./pages/collabs";
 import { CreateNewPost } from "./pages/newpost";
 import { Bookmarks } from "./pages/bookmarks";
 import { UserProfile } from "./pages/userprofile";
+import { Verified } from "./pages/verified";
 
 //create your first component
 const Layout = () => {
@@ -28,15 +28,15 @@ const Layout = () => {
         <ScrollToTop>
           <Navbar />
           <Routes>
-            <Route element={<Landing />} path="/" />
-            <Route element={<Login />} path="/login" />
-            <Route element={<Register />} path="/register" />
-            <Route element={<Single />} path="/single/:theid" />
+            <Route path="/" element={<Landing />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
             <Route path="myfeed" element={<MyFeed />} />
             <Route path="collaborations" element={<Collabs />} />
             <Route path="myfeed/createpost" element={<CreateNewPost />} />
             <Route path="myfeed/bookmarks" element={<Bookmarks />} />
             <Route path="profile/:user" element={<UserProfile />} />
+            <Route path="verified" element={<Verified />} />
             <Route path="*" element={<Error />} />
           </Routes>
           <Footer />

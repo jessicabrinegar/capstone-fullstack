@@ -18,7 +18,7 @@ export const Register = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  const [emailConfirmed, setEmailConfirmed] = useState(false);
+  const [emailConfirmed, setEmailConfirmed] = useState(null);
 
   const navigate = useNavigate();
 
@@ -45,23 +45,28 @@ export const Register = () => {
 
   const onSubmit = (data) => {
     console.log(data);
-    actions
-      .register(
-        data.firstname,
-        data.lastname,
-        data.username,
-        data.email,
-        data.fieldOfStudy,
-        data.university,
-        data.userType,
-        data.password
-      )
-      .then(() => {
-        navigate("/login");
-      });
-    actions.verifyEmail(data.email).then((resp) => console.log(resp));
+    actions.verifyEmail(data.email).then((resp) => {
+      console.log(resp); // {format: true, domain: 'email.com', disposable: false, dns: true}
+      if (resp.format == true && resp.disposable == false && resp.dns == true) {
+        setEmailConfirmed(true);
+        actions
+          .register(
+            data.firstname,
+            data.lastname,
+            data.username,
+            data.email,
+            data.fieldOfStudy,
+            data.university,
+            data.userType,
+            data.password
+          )
+          .then(() => navigate("/verified"));
+      } else {
+        setEmailConfirmed(false);
+        setEmail("");
+      }
+    });
   };
-  // {format: true, domain: 'email.com', disposable: false, dns: true}
   return (
     <div className="container">
       <h3>Registration</h3>
@@ -94,13 +99,25 @@ export const Register = () => {
           value={username}
           onChange={(e) => setUsername(e.target.value)}
         ></input>
-        <input
+        {/* <input
           type="text"
           placeholder="User Type"
           {...register("userType")}
           value={userType}
           onChange={(e) => setUserType(e.target.value)}
-        ></input>
+        ></input> */}
+        <select
+          className="form-select"
+          defaultValue="choose"
+          onChange={(e) => setUserType(e.target.value)}
+          {...register("userType")}
+        >
+          <option value="choose">Choose User Type</option>
+          <option value="undergrad">Undergraduate Student</option>
+          <option value="grad">Graduate Student</option>
+          <option value="post-doc">Post-doc</option>
+          <option value="professor">Professor/Scientist</option>
+        </select>
         <input
           type="text"
           placeholder="University"
@@ -129,8 +146,6 @@ export const Register = () => {
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
         ></input>
-        {/* <Link to="/login"></Link> */}
-        {/* <button onClick={handleClick}>Submit</button> */}
         <input type="submit"></input>
       </form>
       <Link to="/">
