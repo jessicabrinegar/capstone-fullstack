@@ -73,6 +73,7 @@ def create_user():
 
 # delete a user
 @api.route('/user/<int:id>', methods=['DELETE'])
+@jwt_required()
 def delete_user(id):
     # rb = request.get_json()
     user = User.query.get(id)
@@ -81,20 +82,22 @@ def delete_user(id):
     return f"User {user.id} was deleted", 200
 
 
-# get a user
-# @api.route('/user/<username>', methods=['GET'])
-# def get_user(username):
-#     rb = request.get_json()
-#     # user = User.query.filter_by(username=rb['username']).first()
-#     user = db.session.query(User).filter(User.username == rb['username']).first()
-#     if user is None:
-#         raise APIException("User not found", 404)
-#     else:
-#         return jsonify(user.serialize()), 200
+#get a user
+@api.route('/user/<username>', methods=['GET'])
+@jwt_required()
+def get_user(username):
+    rb = request.get_json()
+    # user = User.query.filter_by(username=rb['username']).first()
+    user = db.session.query(User).filter(User.username == username).first()
+    if user is None:
+        raise APIException("User not found", 404)
+    else:
+        return jsonify(user.serialize()), 200
 
 
 # get all users
 @api.route('/users', methods=['GET'])
+@jwt_required()
 def get_users():
     users = User.query.all()
     # return serialized version! this ensures password is not returned
@@ -123,6 +126,7 @@ def create_post():
 
 # update a post
 @api.route('/post/<int:id>', methods=['PUT'])
+@jwt_required()
 def update_post(id):
     post = Post.query.get(id)
     if post is None:
@@ -141,6 +145,7 @@ def update_post(id):
 
 # delete a post
 @api.route('/post/<int:id>', methods=['DELETE'])
+@jwt_required()
 def delete_post(id):
     # rb = request.get_json()
     post = Post.query.get(id)
@@ -151,8 +156,8 @@ def delete_post(id):
 
 # get a post
 @api.route('/post/<int:id>', methods=['GET'])
+@jwt_required()
 def get_post(id):
-    # put in the primary key as argument to get
     post = Post.query.get(id)
     if post is None:
         raise APIException("Post not found", 404)
@@ -160,15 +165,16 @@ def get_post(id):
 
 # get all posts
 @api.route('/posts', methods=['GET'])
+@jwt_required()
 def get_all_posts():
     posts = Post.query.all()
-    # return serialized version! this ensures password is not returned
     posts_list = list(map(lambda post: post.serialize(), posts))
     return jsonify(posts_list), 200
 
 
 # post a follow_map
 @api.route('/follow', methods=['POST'])
+@jwt_required()
 def create_follow_map():
     rb = request.get_json()
     user_follower = User.query.get(rb["follower_id"])

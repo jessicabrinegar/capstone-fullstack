@@ -1,14 +1,10 @@
 // import { getCacheDir } from "gh-pages";
 import { Navigate } from "react-router-dom";
 
-const registerURL =
-  "https://3001-jessicabrin-capstoneful-tkbqih5kbhg.ws-eu89.gitpod.io/api/register";
-const loginURL =
-  "https://3001-jessicabrin-capstoneful-tkbqih5kbhg.ws-eu89.gitpod.io/api/token";
-const privateURL =
-  "https://3001-jessicabrin-capstoneful-tkbqih5kbhg.ws-eu89.gitpod.io/api/private";
-const postPostURL =
-  "https://3001-jessicabrin-capstoneful-tkbqih5kbhg.ws-eu89.gitpod.io/api/post";
+const registerURL = process.env.BACKEND_URL + "/api/register";
+const loginURL = process.env.BACKEND_URL + "/api/token";
+const privateURL = process.env.BACKEND_URL + "/api/private";
+const postPostURL = process.env.BACKEND_URL + "/api/post";
 
 const getState = ({ getStore, getActions, setStore }) => {
   return {
@@ -177,40 +173,6 @@ const getState = ({ getStore, getActions, setStore }) => {
         } catch {
           (error) => console.log(error);
         }
-      },
-
-      // syncUserFromLocalStore: () => {
-      //   const user = localStorage.getItem("user");
-      //   if (user && user != "" && user != undefined) {
-      //     setStore({ user: user });
-      //   }
-      // },
-
-      getMessage: async () => {
-        try {
-          // fetching data from the backend
-          const resp = await fetch(process.env.BACKEND_URL + "/api/hello");
-          const data = await resp.json();
-          setStore({ message: data.message });
-          // don't forget to return something, that is how the async resolves
-          return data;
-        } catch (error) {
-          console.log("Error loading message from backend", error);
-        }
-      },
-      changeColor: (index, color) => {
-        //get the store
-        const store = getStore();
-
-        //we have to loop the entire demo array to look for the respective index
-        //and change its color
-        const demo = store.demo.map((elm, i) => {
-          if (i === index) elm.background = color;
-          return elm;
-        });
-
-        //reset the global store
-        setStore({ demo: demo });
       },
     },
   };
