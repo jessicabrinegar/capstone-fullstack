@@ -3,8 +3,9 @@ import { Navigate } from "react-router-dom";
 
 const registerURL = process.env.BACKEND_URL + "/api/register";
 const loginURL = process.env.BACKEND_URL + "/api/token";
-const privateURL = process.env.BACKEND_URL + "/api/private";
+// const privateURL = process.env.BACKEND_URL + "/api/private";
 const postPostURL = process.env.BACKEND_URL + "/api/post";
+const getAllPostsURL = process.env.BACKEND_URL + "/api/posts";
 
 const getState = ({ getStore, getActions, setStore }) => {
   return {
@@ -30,7 +31,7 @@ const getState = ({ getStore, getActions, setStore }) => {
       exampleFunction: () => {
         getActions().changeColor(0, "green");
       },
-
+      // REGISTER USER
       register: async (
         firstname,
         lastname,
@@ -65,8 +66,8 @@ const getState = ({ getStore, getActions, setStore }) => {
           (error) => console.log(error);
         }
       },
-
-      getUser: async () => {
+      // GET A USER BY USERNAME
+      getUser: async (username) => {
         const accessToken = localStorage.getItem("token");
         const opts = {
           method: "GET",
@@ -77,7 +78,10 @@ const getState = ({ getStore, getActions, setStore }) => {
           },
         };
         try {
-          const resp = await fetch(privateURL, opts);
+          const resp = await fetch(
+            process.env.BACKEND_URL + `/user/${username}`,
+            opts
+          );
           if (resp.status !== 200) {
             alert("There has been an error.");
             return false;
@@ -89,7 +93,7 @@ const getState = ({ getStore, getActions, setStore }) => {
           (error) => console.log(error);
         }
       },
-
+      // LOGIN / CREATE ACCESS_TOKEN
       login: async (username, password) => {
         const opts = {
           method: "POST",
@@ -121,20 +125,20 @@ const getState = ({ getStore, getActions, setStore }) => {
           (error) => console.log(error);
         }
       },
-
+      // LOGOUT
       logout: async () => {
         localStorage.removeItem("token");
         localStorage.removeItem("user");
         console.log("logout action called!");
       },
-
+      // SYNC TOKEN ON RELOAD
       syncTokenFromLocalStore: () => {
         const token = localStorage.getItem("token");
         if (token && token != "" && token != undefined) {
           setStore({ token: token });
         }
       },
-
+      // SYNC USER DATA ON RELOAD
       syncUserFromLocalStore: () => {
         const user = localStorage.getItem("user");
         if (user && user != "") {
@@ -142,7 +146,7 @@ const getState = ({ getStore, getActions, setStore }) => {
           setStore({ user: userData });
         }
       },
-
+      // CREATE POST
       createPost: async (author_id, content, fieldOfStudy, postType, title) => {
         const accessToken = localStorage.getItem("token");
         const opts = {
@@ -168,6 +172,31 @@ const getState = ({ getStore, getActions, setStore }) => {
           }
           const data = await resp.json();
           console.log("Post data from the backend: ", data);
+          // setStore({ posts: data });
+          return data;
+        } catch {
+          (error) => console.log(error);
+        }
+      },
+      // GET ALL POSTS
+      getAllPosts: async () => {
+        const accessToken = localStorage.getItem("token");
+        const opts = {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            // "Access-Control-Allow-Origin": "*",
+            Authorization: `Bearer ${accessToken}`,
+          },
+        };
+        try {
+          const resp = await fetch(getAllPostsURL, opts);
+          if (resp.status !== 200) {
+            alert("There has been an error.");
+            return false;
+          }
+          const data = await resp.json();
+          console.log("All post data from the backend: ", data);
           // setStore({ posts: data });
           return data;
         } catch {

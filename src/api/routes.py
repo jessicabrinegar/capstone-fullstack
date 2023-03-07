@@ -50,7 +50,7 @@ def private():
     user=User.query.get(user_token)
     return jsonify(user.serialize()),200
 
-# post (register) a new user
+# register a new user
 @api.route('/register', methods=['POST'])
 def create_user():
     rb = request.get_json()
@@ -86,8 +86,6 @@ def delete_user(id):
 @api.route('/user/<username>', methods=['GET'])
 @jwt_required()
 def get_user(username):
-    rb = request.get_json()
-    # user = User.query.filter_by(username=rb['username']).first()
     user = db.session.query(User).filter(User.username == username).first()
     if user is None:
         raise APIException("User not found", 404)
