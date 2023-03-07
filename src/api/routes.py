@@ -7,6 +7,7 @@ from api.utils import generate_sitemap, APIException
 from flask_jwt_extended import create_access_token
 from flask_jwt_extended import get_jwt_identity
 from flask_jwt_extended import jwt_required
+import requests
 
 api = Blueprint('api', __name__)
 
@@ -14,7 +15,7 @@ api = Blueprint('api', __name__)
 #   *** hashing password during registration? need help with this ***
 #   *** JWT auth during login.. how to ensure username/password matches ***
 
-# Routes needed (YAN):
+# Routes needed:
 #   PUT User
 #   GET post by ID of author
 #   POST, GET, & DELETE Bookmark, GET all bookmarks with ID of user

@@ -18,6 +18,8 @@ export const Register = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
+  const [emailConfirmed, setEmailConfirmed] = useState(false);
+
   const navigate = useNavigate();
 
   const schema = yup.object().shape({
@@ -56,11 +58,10 @@ export const Register = () => {
       )
       .then(() => {
         navigate("/login");
-        // this returns null
-        console.log(store.user);
       });
+    actions.verifyEmail(data.email).then((resp) => console.log(resp));
   };
-
+  // {format: true, domain: 'email.com', disposable: false, dns: true}
   return (
     <div className="container">
       <h3>Registration</h3>

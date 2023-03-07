@@ -6,6 +6,7 @@ const loginURL = process.env.BACKEND_URL + "/api/token";
 // const privateURL = process.env.BACKEND_URL + "/api/private";
 const postPostURL = process.env.BACKEND_URL + "/api/post";
 const getAllPostsURL = process.env.BACKEND_URL + "/api/posts";
+const emailAPI_accessKey = "BQrnUUYUa37fqdqYL2xij6WIjrhrXY2S";
 
 const getState = ({ getStore, getActions, setStore }) => {
   return {
@@ -30,6 +31,22 @@ const getState = ({ getStore, getActions, setStore }) => {
       // Use getActions to call a function within a fuction
       exampleFunction: () => {
         getActions().changeColor(0, "green");
+      },
+      // VERIFY EMAIL
+      verifyEmail: async (email) => {
+        const opts = {
+          method: "GET",
+        };
+        try {
+          const resp = await fetch(
+            `https://disify.com/api/email/${email}`,
+            opts
+          );
+          const data = await resp.json();
+          return data;
+        } catch {
+          (error) => console.log(error);
+        }
       },
       // REGISTER USER
       register: async (
@@ -73,7 +90,6 @@ const getState = ({ getStore, getActions, setStore }) => {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            // "Access-Control-Allow-Origin": "*",
             Authorization: `Bearer ${accessToken}`,
           },
         };

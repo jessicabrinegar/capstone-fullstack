@@ -3,6 +3,28 @@ from sqlalchemy import ForeignKey
 
 db = SQLAlchemy()
 
+class EmailVerification(db.Model):
+    __tablename__='email_verification'
+    id=db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    format = db.Column(db.Boolean)
+    domain = db.Column(db.String(120), unique=True, nullable=False)
+    disposable= db.Column(db.Boolean)
+    dns = db.Column(db.Boolean)
+
+    def __repr__(self):
+        return '<EmailVerification %r>' % self.email
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "email": self.email,
+            "format": self.format,
+            "domain": self.domain,
+            "disposable": self.disposable,
+            "dns": self.dns,
+        }
+
 class User(db.Model):
     __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True)
