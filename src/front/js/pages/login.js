@@ -12,12 +12,12 @@ export const Login = () => {
 
   const handleLogin = () => {
     actions.login(username, password).then(() => {
-      if (store.token && store.token != "" && store.token != undefined) {
+      if (store.token && store.token != "") {
         navigate("/myfeed");
-        // actions.getUser();
       } else {
         setUsername("");
         setPassword("");
+        alert("Incorrect login information provided.");
       }
     });
   };

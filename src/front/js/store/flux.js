@@ -119,7 +119,6 @@ const getState = ({ getStore, getActions, setStore }) => {
         try {
           const resp = await fetch(loginURL, opts);
           if (resp.status !== 200) {
-            alert("There has been an error.");
             return false;
           }
           const data = await resp.json();
@@ -139,7 +138,7 @@ const getState = ({ getStore, getActions, setStore }) => {
       logout: async () => {
         localStorage.removeItem("token");
         localStorage.removeItem("user");
-        console.log("logout action called!");
+        setStore({ token: null });
       },
       // SYNC TOKEN ON RELOAD
       syncTokenFromLocalStore: () => {
@@ -177,7 +176,7 @@ const getState = ({ getStore, getActions, setStore }) => {
         try {
           const resp = await fetch(postPostURL, opts);
           if (resp.status !== 200) {
-            alert("There has been an error.");
+            console.log("There has been an error.");
             return false;
           }
           const data = await resp.json();
@@ -202,12 +201,11 @@ const getState = ({ getStore, getActions, setStore }) => {
         try {
           const resp = await fetch(getAllPostsURL, opts);
           if (resp.status !== 200) {
-            alert("There has been an error.");
+            console.log("There has been an error");
             return false;
           }
           const data = await resp.json();
           console.log("All post data from the backend: ", data);
-          // setStore({ posts: data });
           return data;
         } catch {
           (error) => console.log(error);

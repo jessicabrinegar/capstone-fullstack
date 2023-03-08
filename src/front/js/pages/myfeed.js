@@ -8,9 +8,7 @@ export const MyFeed = () => {
   const { posts, setPosts } = useState(null);
 
   const getAllPosts = () => {
-    actions.getAllPosts().then((resp) => {
-      console.log(resp);
-    });
+    actions.getAllPosts();
   };
 
   useEffect(() => {
