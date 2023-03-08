@@ -80,6 +80,8 @@ export const Register = () => {
       <h3>Registration</h3>
       <form onSubmit={handleSubmit(onSubmit)}>
         <input
+          required
+          maxLength="25"
           type="text"
           placeholder="First Name"
           // ref={register({ required: true })}
@@ -88,6 +90,8 @@ export const Register = () => {
           onChange={(e) => setFirstName(e.target.value)}
         ></input>
         <input
+          required
+          maxLength="40"
           type="text"
           placeholder="Last Name"
           {...register("lastname")}
@@ -95,20 +99,25 @@ export const Register = () => {
           onChange={(e) => setLastName(e.target.value)}
         ></input>
         <input
-          type="text"
+          required
+          type="email"
           placeholder="Email"
           {...register("email")}
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         ></input>
         <input
+          required
           type="text"
+          minLength="5"
+          maxLength="25"
           placeholder="Username"
           {...register("username")}
           value={username}
           onChange={(e) => setUsername(e.target.value)}
         ></input>
         <select
+          required
           className="form-select"
           defaultValue="choose"
           onChange={(e) => setUserType(e.target.value)}
@@ -123,6 +132,7 @@ export const Register = () => {
           <option value="professor">Professor/Scientist</option>
         </select>
         <Select
+          required
           options={universities}
           onInputChange={handleInputChange}
           placeholder="Search for a university"
@@ -133,6 +143,7 @@ export const Register = () => {
           }}
         />
         <input
+          required
           type="text"
           placeholder="Field of Study"
           {...register("fieldOfStudy")}
@@ -140,6 +151,8 @@ export const Register = () => {
           onChange={(e) => setFieldOfStudy(e.target.value)}
         ></input>
         <input
+          required
+          minLength="7"
           type="password"
           placeholder="Password"
           {...register("password")}
@@ -147,6 +160,8 @@ export const Register = () => {
           onChange={(e) => setPassword(e.target.value)}
         ></input>
         <input
+          required
+          minLength="7"
           type="password"
           placeholder="Confirm Password"
           {...register("confirmPassword")}

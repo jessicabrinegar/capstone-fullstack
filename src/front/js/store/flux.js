@@ -3,7 +3,6 @@ import { Navigate } from "react-router-dom";
 
 const registerURL = process.env.BACKEND_URL + "/api/register";
 const loginURL = process.env.BACKEND_URL + "/api/token";
-// const privateURL = process.env.BACKEND_URL + "/api/private";
 const postPostURL = process.env.BACKEND_URL + "/api/post";
 const getAllPostsURL = process.env.BACKEND_URL + "/api/posts";
 const emailAPI_accessKey = "BQrnUUYUa37fqdqYL2xij6WIjrhrXY2S";
