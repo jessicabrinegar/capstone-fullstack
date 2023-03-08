@@ -1,13 +1,12 @@
-import React, { useState, useEffect, useContext, useCallback } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { Context } from "../store/appContext";
-import * as yup from "yup";
-import { yupResolver } from "@hookform/resolvers/yup";
+// import * as yup from "yup";
+// import { yupResolver } from "@hookform/resolvers/yup";
 import { useNavigate } from "react-router-dom";
 import Select from "react-select";
 
-// will likely want to put all this info in the store instead so it can be used in other pages
 export const Register = () => {
   const [firstname, setFirstName] = useState("");
   const [lastname, setLastName] = useState("");
@@ -18,11 +17,13 @@ export const Register = () => {
   const [userType, setUserType] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-
   const [emailConfirmed, setEmailConfirmed] = useState(null);
-
   const [universities, setUniversities] = useState([]);
   const [inputValue, setInputValue] = useState("");
+
+  const { store, actions } = useContext(Context);
+  const navigate = useNavigate();
+  const { register, handleSubmit } = useForm();
 
   useEffect(() => {
     const fetchUniversities = async () => {
@@ -32,9 +33,9 @@ export const Register = () => {
       const data = await response.json();
       setUniversities(
         data.results.map((element) => ({
+          // value: element["school.name"],
           value: element["school.name"],
           label: element["school.name"],
-          name: element["school.name"],
         }))
       );
     };
@@ -44,53 +45,29 @@ export const Register = () => {
   const handleInputChange = (newValue) => {
     setInputValue(newValue);
   };
-  const handleChange = (choice) => {
-    setUniversity(choice.target.value);
-    // const name = choice.name || "university";
-    // const field = get(name);
-    // field.setUniversity(name);
-  };
-
-  const { store, actions } = useContext(Context);
-  const navigate = useNavigate();
-
-  const schema = yup.object().shape({
-    firstname: yup.string().required(),
-    lastname: yup.string().required(),
-    username: yup.string().required(),
-    email: yup.string().email().required(),
-    fieldOfStudy: yup.string().required(),
-    university: yup.string().required(),
-    userType: yup.string().required(),
-    password: yup.string().min(7).max(25).required(),
-    confirmPassword: yup
-      .string()
-      .oneOf([yup.ref("password"), null])
-      .required(),
-  });
-
-  const { register, handleSubmit } = useForm({
-    resolver: yupResolver(schema),
-  });
 
   const onSubmit = (data) => {
+    if (!data.university) {
+      data.university = university;
+    }
     console.log(data);
     actions.verifyEmail(data.email).then((resp) => {
-      console.log(resp); // {format: true, domain: 'email.com', disposable: false, dns: true}
+      console.log(resp);
       if (resp.format == true && resp.disposable == false && resp.dns == true) {
         setEmailConfirmed(true);
-        actions
-          .register(
-            data.firstname,
-            data.lastname,
-            data.username,
-            data.email,
-            data.fieldOfStudy,
-            data.university,
-            data.userType,
-            data.password
-          )
-          .then(() => navigate("/verified"));
+        const registrationResponse = actions.register(
+          data.firstname,
+          data.lastname,
+          data.username,
+          data.email,
+          data.fieldOfStudy,
+          data.university,
+          data.userType,
+          data.password
+        );
+        if (registrationResponse) {
+          return navigate("/verified");
+        }
       } else {
         setEmailConfirmed(false);
         setEmail("");
@@ -105,6 +82,7 @@ export const Register = () => {
         <input
           type="text"
           placeholder="First Name"
+          // ref={register({ required: true })}
           {...register("firstname")}
           value={firstname}
           onChange={(e) => setFirstName(e.target.value)}
@@ -136,7 +114,9 @@ export const Register = () => {
           onChange={(e) => setUserType(e.target.value)}
           {...register("userType")}
         >
-          <option value="choose">Choose User Type</option>
+          <option value="choose" disabled>
+            Choose User Type
+          </option>
           <option value="undergrad">Undergraduate Student</option>
           <option value="grad">Graduate Student</option>
           <option value="post-doc">Post-doc</option>
@@ -145,10 +125,12 @@ export const Register = () => {
         <Select
           options={universities}
           onInputChange={handleInputChange}
-          onChange={handleChange}
-          name="university"
           placeholder="Search for a university"
+          name="university"
           {...register("university")}
+          onChange={(selectedOption) => {
+            setUniversity(selectedOption?.value);
+          }}
         />
         <input
           type="text"

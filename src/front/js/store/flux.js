@@ -65,8 +65,13 @@ const getState = ({ getStore, getActions, setStore }) => {
         };
         try {
           const resp = await fetch(registerURL, opts);
+          if (resp.status !== 200) {
+            alert("There has been an error in registering.");
+            return false;
+          }
           const data = await resp.json();
-          setStore({ registered: true });
+          // setStore({ registered: true });
+          console.log(data);
           return data;
         } catch {
           (error) => console.log(error);
