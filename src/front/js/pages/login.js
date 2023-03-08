@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { Context } from "../store/appContext";
 import "../../styles/home.css";
 import { useNavigate } from "react-router-dom";
+// import withAuth from "../component/HOC";
 
 export const Login = () => {
   const { store, actions } = useContext(Context);

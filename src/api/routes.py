@@ -24,6 +24,12 @@ api = Blueprint('api', __name__)
 #   The backref attribute (see models) allows access to the related post from a User object using the user.posts attribute, for example
         # maybe this can be used? not sure
 
+# @api.route('/private',methods=["GET"])
+# @jwt_required()
+# def private():
+#     user_token=get_jwt_identity()
+#     user=User.query.get(user_token)
+#     return jsonify(user.serialize()),200
 
 # Create a route to authenticate your users and return JWTs.
 # This will happen at login
