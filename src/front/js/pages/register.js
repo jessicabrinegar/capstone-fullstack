@@ -1,10 +1,11 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { Context } from "../store/appContext";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useNavigate } from "react-router-dom";
+import Select from "react-select";
 
 // will likely want to put all this info in the store instead so it can be used in other pages
 export const Register = () => {
@@ -20,6 +21,37 @@ export const Register = () => {
 
   const [emailConfirmed, setEmailConfirmed] = useState(null);
 
+  const [universities, setUniversities] = useState([]);
+  const [inputValue, setInputValue] = useState("");
+
+  useEffect(() => {
+    const fetchUniversities = async () => {
+      const response = await fetch(
+        `https://api.data.gov/ed/collegescorecard/v1/schools.json?fields=school.name&school.name=${inputValue}&api_key=Dced9mxZyLP3S4hFeCtmTceVtEDBc2ztpeflkVqE`
+      );
+      const data = await response.json();
+      setUniversities(
+        data.results.map((element) => ({
+          value: element["school.name"],
+          label: element["school.name"],
+          name: element["school.name"],
+        }))
+      );
+    };
+    fetchUniversities();
+  }, [inputValue]);
+
+  const handleInputChange = (newValue) => {
+    setInputValue(newValue);
+  };
+  const handleChange = (choice) => {
+    setUniversity(choice.target.value);
+    // const name = choice.name || "university";
+    // const field = get(name);
+    // field.setUniversity(name);
+  };
+
+  const { store, actions } = useContext(Context);
   const navigate = useNavigate();
 
   const schema = yup.object().shape({
@@ -36,8 +68,6 @@ export const Register = () => {
       .oneOf([yup.ref("password"), null])
       .required(),
   });
-
-  const { store, actions } = useContext(Context);
 
   const { register, handleSubmit } = useForm({
     resolver: yupResolver(schema),
@@ -67,6 +97,7 @@ export const Register = () => {
       }
     });
   };
+
   return (
     <div className="container">
       <h3>Registration</h3>
@@ -99,13 +130,6 @@ export const Register = () => {
           value={username}
           onChange={(e) => setUsername(e.target.value)}
         ></input>
-        {/* <input
-          type="text"
-          placeholder="User Type"
-          {...register("userType")}
-          value={userType}
-          onChange={(e) => setUserType(e.target.value)}
-        ></input> */}
         <select
           className="form-select"
           defaultValue="choose"
@@ -118,13 +142,14 @@ export const Register = () => {
           <option value="post-doc">Post-doc</option>
           <option value="professor">Professor/Scientist</option>
         </select>
-        <input
-          type="text"
-          placeholder="University"
+        <Select
+          options={universities}
+          onInputChange={handleInputChange}
+          onChange={handleChange}
+          name="university"
+          placeholder="Search for a university"
           {...register("university")}
-          value={university}
-          onChange={(e) => setUniversity(e.target.value)}
-        ></input>
+        />
         <input
           type="text"
           placeholder="Field of Study"
