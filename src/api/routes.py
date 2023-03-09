@@ -2,34 +2,41 @@
 This module takes care of starting the API Server, Loading the DB and Adding the endpoints
 """
 from flask import Flask, request, jsonify, url_for, Blueprint
-from api.models import db, User, Post, Bookmark, Follow_Map
+from api.models import db, User, Post, Bookmark, Follow_Map, FieldOfStudy, Flag
 from api.utils import generate_sitemap, APIException
 from flask_jwt_extended import create_access_token
 from flask_jwt_extended import get_jwt_identity
 from flask_jwt_extended import jwt_required
-import requests
+import os
+import csv
 
 api = Blueprint('api', __name__)
 
-
-#   *** hashing password during registration? need help with this ***
-#   *** JWT auth during login.. how to ensure username/password matches ***
+#   *** hashing password during registration? ***
 
 # Routes needed:
 #   PUT User
 #   GET post by ID of author
 #   POST, GET, & DELETE Bookmark, GET all bookmarks with ID of user
 #   GET, DELETE folow_map, GET all follow_maps by follower_id
-#   GET user, posts by username?? Worried of how we will access user id from front end
-#   The backref attribute (see models) allows access to the related post from a User object using the user.posts attribute, for example
-        # maybe this can be used? not sure
 
+#   The backref attribute (see models) allows access to the related post from a User object using the user.posts attribute, for example
+        # maybe this can be used? 
+
+# get current user
 # @api.route('/private',methods=["GET"])
 # @jwt_required()
 # def private():
 #     user_token=get_jwt_identity()
 #     user=User.query.get(user_token)
 #     return jsonify(user.serialize()),200
+
+
+@api.route("/get-fields-data", methods=["GET"])
+def get_fields_data():
+    fields = FieldOfStudy.query.all()
+    fields_list = list(map(lambda field: field.serialize(), fields))
+    return jsonify(fields_list), 200
 
 # Create a route to authenticate your users and return JWTs.
 # This will happen at login
@@ -82,7 +89,6 @@ def create_user():
 @api.route('/user/<int:id>', methods=['DELETE'])
 @jwt_required()
 def delete_user(id):
-    # rb = request.get_json()
     user = User.query.get(id)
     db.session.delete(user)
     db.session.commit()
@@ -152,7 +158,6 @@ def update_post(id):
 @api.route('/post/<int:id>', methods=['DELETE'])
 @jwt_required()
 def delete_post(id):
-    # rb = request.get_json()
     post = Post.query.get(id)
     db.session.delete(post)
     db.session.commit()

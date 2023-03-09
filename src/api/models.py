@@ -3,26 +3,25 @@ from sqlalchemy import ForeignKey
 
 db = SQLAlchemy()
 
-class EmailVerification(db.Model):
-    __tablename__='email_verification'
-    id=db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(120), unique=True, nullable=False)
-    format = db.Column(db.Boolean)
-    domain = db.Column(db.String(120), unique=True, nullable=False)
-    disposable= db.Column(db.Boolean)
-    dns = db.Column(db.Boolean)
+# flag for seeing if fieldOfStudy data was added to database
+class Flag(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    fieldsOfStudyAdded = db.Column(db.Boolean, default=False)
+
+class FieldOfStudy(db.Model):
+    __tablename__="field_of_study"
+    id = db.Column(db.Integer, primary_key=True)
+    field = db.Column(db.String(120), unique=True, nullable=False)
+    category = db.Column(db.String(120), unique=False, nullable=False)
 
     def __repr__(self):
-        return '<EmailVerification %r>' % self.email
+        return '<FieldOfStudy %r>' % self.field
 
     def serialize(self):
         return {
             "id": self.id,
-            "email": self.email,
-            "format": self.format,
-            "domain": self.domain,
-            "disposable": self.disposable,
-            "dns": self.dns,
+            "field": self.field,
+            "category": self.category,
         }
 
 class User(db.Model):
