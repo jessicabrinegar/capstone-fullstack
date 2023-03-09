@@ -17,7 +17,9 @@ export const Register = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [emailConfirmed, setEmailConfirmed] = useState(null);
   const [universities, setUniversities] = useState([]);
-  const [inputValue, setInputValue] = useState("");
+  const [fieldsData, setFieldsData] = useState([]);
+  const [uniInputValue, setUniInputValue] = useState("");
+  const [fieldInputValue, setFieldInputValue] = useState("");
 
   const { store, actions } = useContext(Context);
   const navigate = useNavigate();
@@ -26,27 +28,58 @@ export const Register = () => {
   useEffect(() => {
     const fetchUniversities = async () => {
       const response = await fetch(
-        `https://api.data.gov/ed/collegescorecard/v1/schools.json?fields=school.name&school.name=${inputValue}&api_key=Dced9mxZyLP3S4hFeCtmTceVtEDBc2ztpeflkVqE`
+        `https://api.data.gov/ed/collegescorecard/v1/schools.json?fields=school.name&school.name=${uniInputValue}&api_key=Dced9mxZyLP3S4hFeCtmTceVtEDBc2ztpeflkVqE`
       );
       const data = await response.json();
       setUniversities(
         data.results.map((element) => ({
-          // value: element["school.name"],
           value: element["school.name"],
           label: element["school.name"],
         }))
       );
     };
     fetchUniversities();
-  }, [inputValue]);
+  }, [uniInputValue]);
 
-  const handleInputChange = (newValue) => {
-    setInputValue(newValue);
+  useEffect(() => {
+    const fetchFieldsOfStudy = async () => {
+      const opts = {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+      };
+      const response = await fetch(
+        process.env.BACKEND_URL + `/api/find-field?query=${fieldInputValue}`,
+        opts
+      );
+      const data = await response.json();
+      setFieldsData(
+        data.map((element) => ({
+          value: element["field"].toLowerCase(),
+          label: element["field"].toLowerCase(),
+        }))
+      );
+    };
+    fetchFieldsOfStudy();
+  }, [fieldInputValue]);
+
+  const handleUniChange = (newValue) => {
+    setUniInputValue(newValue);
+  };
+
+  const handleFieldChange = (newValue) => {
+    setFieldInputValue(newValue);
   };
 
   const onSubmit = (data) => {
+    // because useState is asynchronous, need to ensure it's set before registering data
     if (!data.university) {
       data.university = university;
+    }
+    if (!data.fieldOfStudy) {
+      data.fieldOfStudy = fieldOfStudy;
     }
     console.log(data);
     actions.verifyEmail(data.email).then((resp) => {
@@ -132,7 +165,7 @@ export const Register = () => {
         <Select
           required
           options={universities}
-          onInputChange={handleInputChange}
+          onInputChange={handleUniChange}
           placeholder="Search for a university"
           name="university"
           {...register("university")}
@@ -140,14 +173,17 @@ export const Register = () => {
             setUniversity(selectedOption?.value);
           }}
         />
-        <input
+        <Select
           required
-          type="text"
-          placeholder="Field of Study"
+          options={fieldsData}
+          onInputChange={handleFieldChange}
+          placeholder="Search for a field of study"
+          name="fieldOfStudy"
           {...register("fieldOfStudy")}
-          value={fieldOfStudy}
-          onChange={(e) => setFieldOfStudy(e.target.value)}
-        ></input>
+          onChange={(selectedOption) => {
+            setFieldOfStudy(selectedOption?.value);
+          }}
+        />
         <input
           required
           minLength="7"

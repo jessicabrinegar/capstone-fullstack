@@ -37,7 +37,7 @@ api = Blueprint('api', __name__)
 def find_fieldOfStudy():
     query = request.args.get('query', '')
     fields = FieldOfStudy.query.all()
-    filtered_fields = [field.serialize() for field in fields if query.lower() in field.field.lower()]
+    filtered_fields = list(field.serialize() for field in fields if query.lower() in field.field.lower())
     return jsonify(filtered_fields), 200
 
 
