@@ -31,7 +31,17 @@ api = Blueprint('api', __name__)
 #     user=User.query.get(user_token)
 #     return jsonify(user.serialize()),200
 
+# find a field of study.
+# /find-field?query=<input>
+@api.route("/find-field", methods=["GET"])
+def find_fieldOfStudy():
+    query = request.args.get('query', '')
+    fields = FieldOfStudy.query.all()
+    filtered_fields = [field.serialize() for field in fields if query.lower() in field.field.lower()]
+    return jsonify(filtered_fields), 200
 
+
+# get all FieldsOfStudy data
 @api.route("/get-fields-data", methods=["GET"])
 def get_fields_data():
     fields = FieldOfStudy.query.all()
