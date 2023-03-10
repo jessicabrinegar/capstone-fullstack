@@ -15,7 +15,6 @@ import { CreateNewPost } from "./pages/newpost";
 import { Bookmarks } from "./pages/bookmarks";
 import { UserProfile } from "./pages/userprofile";
 import { Verified } from "./pages/verified";
-import { Redirect } from "react-router-dom";
 
 //create your first component
 const Layout = () => {
@@ -33,23 +32,13 @@ const Layout = () => {
             <Route path="/" element={<Landing />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            {/* <Route path="myfeed" element={<MyFeed />} /> */}
-            <Route path="myfeed" element={token ? <MyFeed /> : <Landing />} />
-            <Route
-              path="collaborations"
-              element={token ? <Collabs /> : <Landing />}
-            />
-            <Route
-              path="myfeed/createpost"
-              element={token ? <CreateNewPost /> : <Landing />}
-            />
-            <Route
-              path="myfeed/bookmarks"
-              element={token ? <Bookmarks /> : <Landing />}
-            />
+            <Route path="/myfeed" element={<MyFeed />} />
+            <Route path="/collaborations" element={<Collabs />} />
+            <Route path="/myfeed/createpost" element={<CreateNewPost />} />
+            <Route path="/myfeed/bookmarks" element={<Bookmarks />} />
             <Route path="profile/:user" element={<UserProfile />} />
             <Route path="verified" element={<Verified />} />
-            <Route path="*" element={<Error />} />
+            {/* <Route path="*" element={<Error />} /> */}
           </Routes>
           <Footer />
         </ScrollToTop>

@@ -69,7 +69,6 @@ const getState = ({ getStore, getActions, setStore }) => {
             return false;
           }
           const data = await resp.json();
-          // setStore({ registered: true });
           console.log(data);
           return data;
         } catch {
@@ -137,21 +136,16 @@ const getState = ({ getStore, getActions, setStore }) => {
       logout: async () => {
         localStorage.removeItem("token");
         localStorage.removeItem("user");
-        setStore({ token: null });
+        setStore({ token: null, user: null });
       },
-      // SYNC TOKEN ON RELOAD
-      syncTokenFromLocalStore: () => {
+      // SYNC LOCAL STORAGE TO STORE ON RELOAD
+      syncFromLocalStore: () => {
         const token = localStorage.getItem("token");
-        if (token && token != "" && token != undefined) {
-          setStore({ token: token });
-        }
-      },
-      // SYNC USER DATA ON RELOAD
-      syncUserFromLocalStore: () => {
         const user = localStorage.getItem("user");
-        if (user && user != "") {
+        if (token && user) {
+          console.log(token, user);
           const userData = JSON.parse(user);
-          setStore({ user: userData });
+          setStore({ token: token, user: userData });
         }
       },
       // CREATE POST
@@ -175,12 +169,11 @@ const getState = ({ getStore, getActions, setStore }) => {
         try {
           const resp = await fetch(postPostURL, opts);
           if (resp.status !== 200) {
-            console.log("There has been an error.");
+            console.log("There has been an error in creating a post.");
             return false;
           }
           const data = await resp.json();
           console.log("Post data from the backend: ", data);
-          // setStore({ posts: data });
           return data;
         } catch {
           (error) => console.log(error);
@@ -200,11 +193,10 @@ const getState = ({ getStore, getActions, setStore }) => {
         try {
           const resp = await fetch(getAllPostsURL, opts);
           if (resp.status !== 200) {
-            console.log("There has been an error");
+            console.log("There has been an error in fetching all post data");
             return false;
           }
           const data = await resp.json();
-          console.log("All post data from the backend: ", data);
           return data;
         } catch {
           (error) => console.log(error);

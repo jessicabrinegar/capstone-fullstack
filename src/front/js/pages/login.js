@@ -1,8 +1,7 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { Context } from "../store/appContext";
 import "../../styles/home.css";
 import { useNavigate } from "react-router-dom";
-// import withAuth from "../component/HOC";
 
 export const Login = () => {
   const { store, actions } = useContext(Context);
@@ -12,8 +11,8 @@ export const Login = () => {
   const navigate = useNavigate();
 
   const handleLogin = () => {
-    actions.login(username, password).then(() => {
-      if (store.token && store.token != "") {
+    actions.login(username, password).then((resp) => {
+      if (resp) {
         navigate("/myfeed");
       } else {
         setUsername("");

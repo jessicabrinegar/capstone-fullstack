@@ -5,13 +5,17 @@ import { Post } from "../component/post.js";
 
 export const MyFeed = () => {
   const { store, actions } = useContext(Context);
-  const { posts, setPosts } = useState(null);
-
-  const getAllPosts = () => {
-    actions.getAllPosts();
-  };
+  const [posts, setPosts] = useState([]);
+  // const [postID, setPostID] = useState(0);
 
   useEffect(() => {
+    
+    const getAllPosts = () => {
+      actions.getAllPosts().then((resp) => {
+        setPosts(resp);
+        console.log(resp);
+      });
+    };
     getAllPosts();
   }, []);
 
@@ -28,7 +32,16 @@ export const MyFeed = () => {
       <Outlet></Outlet>
       <div>
         <p>This is the MyFeed page.</p>
-        <Post />
+        {posts.map((post) => (
+          <Post
+            key={post.id}
+            author_id={post.author_id}
+            content={post.content}
+            fos={post.field_of_study}
+            type={post.post_type}
+            title={post.title}
+          />
+        ))}
       </div>
     </div>
   );
