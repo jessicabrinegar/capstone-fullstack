@@ -143,7 +143,7 @@ def create_post():
     )
     db.session.add(new_post)
     db.session.commit()
-    return f"Post '{rb['title']}' was created", 200
+    return f"Post was created", 200
 
 # update a post
 @api.route('/post/<int:id>', methods=['PUT'])

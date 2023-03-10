@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useMemo } from "react";
 import { Context } from "../store/appContext";
 import "../../styles/home.css";
 import { useNavigate } from "react-router-dom";
@@ -21,7 +21,18 @@ export const CreateNewPost = () => {
   const [fieldInputValue, setFieldInputValue] = useState("");
   const [fieldsData, setFieldsData] = useState([]);
 
-  const author = JSON.parse(localStorage.getItem("user"));
+  // const author = JSON.parse(localStorage.getItem("user"));
+  const author = useMemo(() => {
+    if (!store) return null;
+    else return store.user;
+  });
+  useEffect(() => {
+    if (store) {
+      // const author = store.user.id;
+      console.log("Store.user.id from createNewPost component: ", author);
+      console.log("Store.token from createNewPost component: ", store.token);
+    }
+  }, [store, author]);
 
   const navigate = useNavigate();
 
@@ -30,6 +41,7 @@ export const CreateNewPost = () => {
   };
 
   useEffect(() => {
+    // if(!store) return null;
     const fetchFieldsOfStudy = async () => {
       const opts = {
         method: "GET",
@@ -50,15 +62,16 @@ export const CreateNewPost = () => {
         }))
       );
     };
-    fetchFieldsOfStudy();
-  }, [fieldInputValue]);
+    if (store) fetchFieldsOfStudy();
+  }, [store, fieldInputValue]);
 
   const handleSubmit = () => {
+    const author = store.user.id;
     if (!fieldOfStudy) {
       fieldOfStudy = fieldOfStudy;
     }
     actions
-      .createPost(author.id, content, fieldOfStudy, postType, title)
+      .createPost(author, content, fieldOfStudy, postType, title)
       .then((resp) => {
         if (resp) {
           navigate("/myfeed");
@@ -69,7 +82,7 @@ export const CreateNewPost = () => {
         }
       });
   };
-
+  if (!author) return null;
   return (
     <div className="text-center mt-5">
       <h1>Create New Post</h1>
@@ -86,7 +99,7 @@ export const CreateNewPost = () => {
           placeholder="Choose a post type"
           name="postType"
           onChange={(selectedOption) => {
-            setPostType(selectedOption);
+            setPostType(selectedOption.value);
           }}
         />
         <input

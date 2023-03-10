@@ -8,25 +8,29 @@ export const MyFeed = () => {
   const [posts, setPosts] = useState([]);
   // const [postID, setPostID] = useState(0);
 
+  const getAllPosts = () => {
+    actions.getAllPosts().then((resp) => {
+      setPosts(resp);
+      console.log(resp);
+    });
+  };
+
   useEffect(() => {
-    
-    const getAllPosts = () => {
-      actions.getAllPosts().then((resp) => {
-        setPosts(resp);
-        console.log(resp);
-      });
-    };
+    console.log("Token from beginning of useEffect in myFeed: ", store.token);
     getAllPosts();
+    console.log("Token from end of useEffect in myFeed: ", store.token);
   }, []);
+
+  console.log("Token from myFeed component: ", store.token);
 
   return (
     <div className="d-flex justify-content-around">
       <div className="d-flex flex-column">
         <div>
-          <Link to="createpost">Create New Post</Link>
+          <Link to="/createpost">Create New Post</Link>
         </div>
         <div>
-          <Link to="bookmarks">Bookmarks</Link>
+          <Link to="/bookmarks">Bookmarks</Link>
         </div>
       </div>
       <Outlet></Outlet>

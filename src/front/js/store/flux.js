@@ -107,7 +107,6 @@ const getState = ({ getStore, getActions, setStore }) => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": "*",
           },
           body: JSON.stringify({
             username: username,
@@ -143,7 +142,6 @@ const getState = ({ getStore, getActions, setStore }) => {
         const token = localStorage.getItem("token");
         const user = localStorage.getItem("user");
         if (token && user) {
-          console.log(token, user);
           const userData = JSON.parse(user);
           setStore({ token: token, user: userData });
         }
@@ -155,7 +153,6 @@ const getState = ({ getStore, getActions, setStore }) => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "Access-Control-Allow-Origin": "*",
             Authorization: `Bearer ${accessToken}`,
           },
           body: JSON.stringify({
@@ -172,9 +169,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             console.log("There has been an error in creating a post.");
             return false;
           }
-          const data = await resp.json();
-          console.log("Post data from the backend: ", data);
-          return data;
+          return true;
         } catch {
           (error) => console.log(error);
         }
@@ -186,7 +181,6 @@ const getState = ({ getStore, getActions, setStore }) => {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            // "Access-Control-Allow-Origin": "*",
             Authorization: `Bearer ${accessToken}`,
           },
         };

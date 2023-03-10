@@ -35,9 +35,6 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 MIGRATE = Migrate(app, db, compare_type = True)
 db.init_app(app)
 
-# Allow CORS requests to this API
-CORS(app)
-
 # add the admin
 setup_admin(app)
 
@@ -46,6 +43,9 @@ setup_commands(app)
 # Add all endpoints form the API with a "api" prefix
 app.register_blueprint(api, url_prefix='/api')
 
+# Allow CORS requests to this API
+# CORS(app)
+CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 # Handle/serialize errors like a JSON object
 @app.errorhandler(APIException)

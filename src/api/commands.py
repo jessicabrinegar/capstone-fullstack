@@ -43,6 +43,7 @@ def setup_commands(app):
                 db.session.add(new_fieldOfStudy)
         db.session.commit()
 
+# ensure the data hasnt already been added
     # @app.cli.command("add-fields-data") 
     # def add_data():
     #     a_flag = Flag.query.get(1)

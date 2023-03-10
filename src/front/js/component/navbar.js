@@ -15,7 +15,7 @@ export const Navbar = () => {
   };
 
   useEffect(() => {
-    if (store.token && store.token != "" && store.token != undefined) {
+    if (store.token && store.token != "") {
       setAuth(true);
     } else setAuth(false);
   }, [store.token]);

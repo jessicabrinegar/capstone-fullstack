@@ -34,8 +34,8 @@ const Layout = () => {
             <Route path="/register" element={<Register />} />
             <Route path="/myfeed" element={<MyFeed />} />
             <Route path="/collaborations" element={<Collabs />} />
-            <Route path="/myfeed/createpost" element={<CreateNewPost />} />
-            <Route path="/myfeed/bookmarks" element={<Bookmarks />} />
+            <Route path="/createpost" element={<CreateNewPost />} />
+            <Route path="/bookmarks" element={<Bookmarks />} />
             <Route path="profile/:user" element={<UserProfile />} />
             <Route path="verified" element={<Verified />} />
             {/* <Route path="*" element={<Error />} /> */}
