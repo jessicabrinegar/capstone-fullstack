@@ -215,6 +215,7 @@ def get_user_posts(user_id):
 
 # post a follow_map
 @api.route('/follow', methods=['POST'])
+@jwt_required()
 def create_follow_map():
     rb = request.get_json()
     user_follower = User.query.get(rb["follower_id"])
@@ -234,12 +235,14 @@ def create_follow_map():
 
 # get a follow_map
 @api.route('/follow-map/<int:follow_map_id>', methods=['GET'])
+@jwt_required()
 def get_follow_map(follow_map_id):
     follow_map = Follow_Map.query.get_or_404(follow_map_id)
     return jsonify(follow_map.serialize()), 200
 
 # delete a follow_map
 @api.route('/follow/<int:follow_map_id>', methods=['DELETE'])
+@jwt_required()
 def delete_follow_map(follow_map_id):
     follow_map = Follow_Map.query.get_or_404(follow_map_id)
     db.session.delete(follow_map)
@@ -248,6 +251,7 @@ def delete_follow_map(follow_map_id):
 
 # get a follow_map by the follower_id
 @api.route('/follow_map/<int:follower_id>', methods=['GET'])
+@jwt_required()
 def get_follow_map_by_follower_id(follower_id):
     follow_map = Follow_Map.query.filter_by(follower_id=follower_id).first()
     if follow_map is None:
@@ -256,6 +260,7 @@ def get_follow_map_by_follower_id(follower_id):
 
 # get a follow_map by the target_user_id
 @api.route('/follow_map/target/<int:target_user_id>', methods=['GET'])
+@jwt_required()
 def get_follow_map_by_target_id(target_user_id):
     follow_map = Follow_Map.query.filter_by(target_user_id=target_user_id).all()
     if not follow_map:
@@ -264,6 +269,7 @@ def get_follow_map_by_target_id(target_user_id):
 
 # create bookmark
 @api.route('/bookmark', methods=['POST'])
+@jwt_required()
 def create_bookmark():
     request_body = request.get_json()
     user_id = request_body.get('user_id')
@@ -282,7 +288,7 @@ def create_bookmark():
     )
     db.session.add(new_bookmark)
     db.session.commit()
-    return jsonify({'message': 'Bookmark created'}), 201
+    return jsonify(new_bookmark.serialize()), 201
 
 
 # get bookmarks by user id
@@ -292,8 +298,8 @@ def get_bookmark(user_id):
     user = User.query.get(user_id)
     if not user:
         return jsonify({'message': 'User not found'}), 404
-    bookmarks = Bookmark.query.filter_by(user_id=user_id).all()
-    bookmarks_list = [bookmark.serialize() for bookmark in bookmarks]
+    bookmarks = Bookmark.query.filter_by(user_id=user_id).join(Post).all()
+    bookmarks_list = [bookmark.post_r.serialize() for bookmark in bookmarks]
     return jsonify(bookmarks_list), 200
 
 # get all bookmarks
@@ -305,12 +311,12 @@ def get_all_bookmarks():
     return jsonify(bookmark_list), 200
 
 # delete a bookmark
-@api.route('/bookmark/<int:bookmark_id>', methods=['DELETE'])
+@api.route('/delete-bookmark/<int:user_id>/<int:post_id>', methods=['DELETE'])
 @jwt_required()
-def delete_bookmark(bookmark_id):
-    bookmark = Bookmark.query.get(bookmark_id)
+def delete_bookmark(user_id, post_id):
+    bookmark = Bookmark.query.filter_by(user_id=user_id, post_id=post_id).first()
     if not bookmark:
         return jsonify({'message': 'Bookmark not found'}), 404
     db.session.delete(bookmark)
     db.session.commit()
-    return jsonify({'message': 'Bookmark deleted'}), 200
+    return jsonify({'message': 'Bookmark deleted successfully'}), 200

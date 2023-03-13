@@ -1,7 +1,7 @@
 import React, { useContext, useMemo, useState, useEffect } from "react";
 import { Context } from "../store/appContext";
 import { Link, Outlet } from "react-router-dom";
-import { Post } from "../component/post.js";
+import { Bookmark } from "../component/bookmark";
 
 export const Bookmarks = () => {
   const { store, actions } = useContext(Context);
@@ -22,14 +22,14 @@ export const Bookmarks = () => {
     if (user) {
       getBookmarks();
     }
-  }, [user]);
+  }, [user, bookmarks]);
 
   if (!user) return null;
   return (
     <div>
       This is the Bookmarks page.
       {bookmarks.map((post) => (
-        <Post
+        <Bookmark
           key={post.id}
           post_id={post.id}
           author_id={post.author_id}

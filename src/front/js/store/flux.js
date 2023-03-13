@@ -234,21 +234,34 @@ const getState = ({ getStore, getActions, setStore }) => {
             return false;
           }
           const data = await resp.json();
-          let post_ids = [];
-          for (let elem of data) {
-            post_ids.push(elem.post_id);
+          localStorage.setItem("bookmarks", data);
+          return data;
+        } catch {
+          (error) => console.log(error);
+        }
+      },
+      // DELETE BOOKMARK
+      deleteBookmark: async (user_id, post_id) => {
+        const accessToken = localStorage.getItem("token");
+        const opts = {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+        };
+        try {
+          const resp = await fetch(
+            process.env.BACKEND_URL +
+              `/api/delete-bookmark/${user_id}/${post_id}`,
+            opts
+          );
+          if (resp.status != 200) {
+            console.log("There has been an error in deleting the bookmark.");
+            return false;
           }
-          const allPosts = await getActions().getAllPosts();
-          const posts = [];
-          for (let post of allPosts) {
-            for (let id of post_ids) {
-              if (post.id == id) {
-                posts.push(post);
-              }
-            }
-          }
-          setStore({ bookmarks: posts });
-          return posts;
+          const data = await resp.json();
+          return data;
         } catch {
           (error) => console.log(error);
         }
