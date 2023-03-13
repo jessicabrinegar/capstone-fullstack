@@ -40,7 +40,7 @@ export const Bookmarks = () => {
       isMounted = false;
       abortController.abort();
     };
-  }, [user, bookmarks, actions]);
+  }, [user, actions, bookmarks]);
 
   if (!user) return null;
   return (

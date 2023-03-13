@@ -235,7 +235,8 @@ const getState = ({ getStore, getActions, setStore }) => {
             return false;
           }
           const data = await resp.json();
-          localStorage.setItem("bookmarks", data);
+          // console.log(data);
+          // localStorage.setItem("bookmarks", JSON.stringify(data));
           return data;
         } catch {
           (error) => console.log(error);
@@ -271,9 +272,15 @@ const getState = ({ getStore, getActions, setStore }) => {
       syncFromLocalStore: () => {
         const token = localStorage.getItem("token");
         const user = localStorage.getItem("user");
+        // const bookmarks = localStorage.getItem("bookmarks");
+        // const bookmarksParsed = JSON.parse(bookmarks);
         if (token && user) {
           const userData = JSON.parse(user);
-          setStore({ token: token, user: userData });
+          setStore({
+            token: token,
+            user: userData,
+            // bookmarks: bookmarks,
+          });
         }
       },
     },
