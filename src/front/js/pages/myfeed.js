@@ -16,12 +16,8 @@ export const MyFeed = () => {
   };
 
   useEffect(() => {
-    console.log("Token from beginning of useEffect in myFeed: ", store.token);
     getAllPosts();
-    console.log("Token from end of useEffect in myFeed: ", store.token);
   }, []);
-
-  console.log("Token from myFeed component: ", store.token);
 
   return (
     <div className="d-flex justify-content-around">

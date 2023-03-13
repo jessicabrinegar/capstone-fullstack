@@ -21,7 +21,6 @@ export const CreateNewPost = () => {
   const [fieldInputValue, setFieldInputValue] = useState("");
   const [fieldsData, setFieldsData] = useState([]);
 
-  // const author = JSON.parse(localStorage.getItem("user"));
   const author = useMemo(() => {
     if (!store) return null;
     else return store.user;
@@ -30,7 +29,6 @@ export const CreateNewPost = () => {
     if (store) {
       // const author = store.user.id;
       console.log("Store.user.id from createNewPost component: ", author);
-      console.log("Store.token from createNewPost component: ", store.token);
     }
   }, [store, author]);
 
@@ -41,7 +39,6 @@ export const CreateNewPost = () => {
   };
 
   useEffect(() => {
-    // if(!store) return null;
     const fetchFieldsOfStudy = async () => {
       const opts = {
         method: "GET",

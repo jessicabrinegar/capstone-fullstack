@@ -36,7 +36,7 @@ const Layout = () => {
             <Route path="/collaborations" element={<Collabs />} />
             <Route path="/createpost" element={<CreateNewPost />} />
             <Route path="/bookmarks" element={<Bookmarks />} />
-            <Route path="profile/:user" element={<UserProfile />} />
+            <Route path="/profile/:user" element={<UserProfile />} />
             <Route path="verified" element={<Verified />} />
             {/* <Route path="*" element={<Error />} /> */}
           </Routes>

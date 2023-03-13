@@ -83,7 +83,7 @@ class Bookmark(db.Model):
     user_id = db.Column(db.Integer, ForeignKey('user.id'), nullable=False)
     user = db.relationship('User', foreign_keys=[user_id], backref=db.backref('bookmarks', lazy=True))
     post_id = db.Column(db.Integer, ForeignKey('post.id'), nullable=False)
-    user = db.relationship('Post', foreign_keys=[post_id])
+    post_r = db.relationship('Post', foreign_keys=[post_id])
 
     def __repr__(self):
         return '<Bookmark %r>' % self.post_id
