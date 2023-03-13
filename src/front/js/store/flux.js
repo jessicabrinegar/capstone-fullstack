@@ -8,7 +8,6 @@ const postPostURL = process.env.BACKEND_URL + "/api/post";
 const getAllPostsURL = process.env.BACKEND_URL + "/api/posts";
 const createBookmarkURL = process.env.BACKEND_URL + "/api/bookmark";
 const getBookmarksURL = process.env.BACKEND_URL + "/api/bookmark/";
-const getPostByID = process.env.BACKEND_URL + "/post/";
 
 const getState = ({ getStore, getActions, setStore }) => {
   return {
@@ -181,6 +180,31 @@ const getState = ({ getStore, getActions, setStore }) => {
         };
         try {
           const resp = await fetch(getAllPostsURL, opts);
+          if (resp.status !== 200) {
+            console.log("There has been an error in fetching all post data");
+            return false;
+          }
+          const data = await resp.json();
+          return data;
+        } catch {
+          (error) => console.log(error);
+        }
+      },
+      // GET ALL POSTS BY USER
+      getUserPosts: async (user_id) => {
+        const accessToken = localStorage.getItem("token");
+        const opts = {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+        };
+        try {
+          const resp = await fetch(
+            process.env.BACKEND_URL + `/api/user/${user_id}/posts`,
+            opts
+          );
           if (resp.status !== 200) {
             console.log("There has been an error in fetching all post data");
             return false;

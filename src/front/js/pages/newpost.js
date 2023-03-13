@@ -25,11 +25,6 @@ export const CreateNewPost = () => {
     if (!store) return null;
     else return store.user;
   });
-  // useEffect(() => {
-  //   if (store) {
-  //     console.log("Store.user.id from createNewPost component: ", author);
-  //   }
-  // }, [store, author]);
 
   const navigate = useNavigate();
 

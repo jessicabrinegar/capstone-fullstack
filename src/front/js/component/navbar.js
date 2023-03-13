@@ -39,6 +39,9 @@ export const Navbar = () => {
           </Link>
         </div>
         <div className="ml-auto">
+          <Link to="/myprofile">
+            <button className="btn btn-primary">My Profile</button>
+          </Link>
           <Link to="/">
             <button className="btn btn-primary" onClick={handleLogout}>
               Logout
