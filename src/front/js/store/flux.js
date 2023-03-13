@@ -207,7 +207,7 @@ const getState = ({ getStore, getActions, setStore }) => {
         };
         try {
           const resp = await fetch(createBookmarkURL, opts);
-          if (resp.status !== 201) {
+          if (resp.status !== 200) {
             console.log("There has been an error in posting a bookmark");
             return false;
           }
@@ -218,7 +218,7 @@ const getState = ({ getStore, getActions, setStore }) => {
         }
       },
       // GET ALL BOOKMARKS BY USER
-      getBookmarks: async (user_id) => {
+      getBookmarks: async (user_id, signal) => {
         const accessToken = localStorage.getItem("token");
         const opts = {
           method: "GET",
@@ -226,6 +226,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             "Content-Type": "application/json",
             Authorization: `Bearer ${accessToken}`,
           },
+          signal: signal,
         };
         try {
           const resp = await fetch(getBookmarksURL + user_id, opts);

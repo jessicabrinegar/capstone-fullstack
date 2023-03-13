@@ -151,7 +151,7 @@ def create_post():
     )
     db.session.add(new_post)
     db.session.commit()
-    return jsonify({'message': 'Post was created'}), 201
+    return jsonify({'message': 'Post was created'}), 200
 
 
 # update a post
@@ -180,7 +180,7 @@ def delete_post(id):
     post = Post.query.get(id)
     db.session.delete(post)
     db.session.commit()
-    return jsonify({'message': f'Post {post.id} was deleted'}), 201
+    return jsonify({'message': f'Post {post.id} was deleted'}), 200
 
 
 # get a post
@@ -231,7 +231,7 @@ def create_follow_map():
     )
     db.session.add(new_follow_map)
     db.session.commit()
-    return jsonify({'message': 'Follow map was created'}), 201
+    return jsonify({'message': 'Follow map was created'}), 200
 
 # get a follow_map
 @api.route('/follow-map/<int:follow_map_id>', methods=['GET'])
@@ -288,7 +288,7 @@ def create_bookmark():
     )
     db.session.add(new_bookmark)
     db.session.commit()
-    return jsonify(new_bookmark.serialize()), 201
+    return jsonify(new_bookmark.serialize()), 200
 
 
 # get bookmarks by user id

@@ -2,6 +2,7 @@ import React, { useContext, useMemo, useState, useEffect } from "react";
 import { Context } from "../store/appContext";
 import { Link, Outlet } from "react-router-dom";
 import { Bookmark } from "../component/bookmark";
+import { Controller } from "react-hook-form";
 
 export const Bookmarks = () => {
   const { store, actions } = useContext(Context);
@@ -13,16 +14,33 @@ export const Bookmarks = () => {
   });
 
   useEffect(() => {
-    const getBookmarks = () => {
+    let isMounted = true;
+    const abortController = new AbortController();
+    const getBookmarks = async () => {
       const userID = user.id;
-      actions.getBookmarks(userID).then((resp) => {
-        setBookmarks(resp);
-      });
+      try {
+        const response = await actions.getBookmarks(
+          userID,
+          abortController.signal
+        );
+        if (isMounted && response.length > 0) {
+          setBookmarks(response);
+        }
+      } catch (error) {
+        if (error.name === "AbortError") {
+          // request was cancelled
+          return;
+        }
+      }
     };
     if (user) {
       getBookmarks();
     }
-  }, [user, bookmarks]);
+    return () => {
+      isMounted = false;
+      abortController.abort();
+    };
+  }, [user, bookmarks, actions]);
 
   if (!user) return null;
   return (
