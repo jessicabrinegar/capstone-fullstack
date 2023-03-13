@@ -9,8 +9,31 @@ from flask_jwt_extended import get_jwt_identity
 from flask_jwt_extended import jwt_required
 import os
 import csv
+from werkzeug.utils import secure_filename
 
 api = Blueprint('api', __name__)
+app = Flask(__name__)
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
+UPLOAD_FOLDER = '/workspace/capstone-fullstack/src/api/uploads'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+@api.route('/user/<int:user_id>/upload', methods=['POST'])
+def upload_file(user_id):
+    file = request.files['file']
+    if file and allowed_file(file.filename):
+        filename = secure_filename(file.filename)
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        user = User.query.get(user_id)
+        with open(os.path.join(app.config['UPLOAD_FOLDER'], filename), 'rb') as f:
+            user.profile_picture = f.read()
+        db.session.commit()
+        return jsonify({'message': 'File uploaded successfully.'}), 200
+    else:
+        return jsonify({'error': 'Invalid file type.'}), 400
 
 #   *** hashing password ***
 

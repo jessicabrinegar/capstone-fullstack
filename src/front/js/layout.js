@@ -15,6 +15,7 @@ import { CreateNewPost } from "./pages/newpost";
 import { Bookmarks } from "./pages/bookmarks";
 import { UserProfile } from "./pages/userprofile";
 import { Verified } from "./pages/verified";
+import { Upload } from "./pages/upload.js";
 
 //create your first component
 const Layout = () => {
@@ -38,6 +39,7 @@ const Layout = () => {
           {/* <Route path="/profile/:user" element={<UserProfile />} /> */}
           <Route path="/myprofile" element={<UserProfile />} />
           <Route path="verified" element={<Verified />} />
+          <Route path="/upload" element={<Upload />} />
           {/* <Route path="*" element={<Error />} /> */}
         </Routes>
         <Footer />

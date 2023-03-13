@@ -36,6 +36,7 @@ class User(db.Model):
     university = db.Column(db.String(80), unique=False, nullable=False)
     password = db.Column(db.String(80), unique=False, nullable=False)
     is_active = db.Column(db.Boolean(), unique=False, nullable=False)
+    profile_picture = db.Column(db.LargeBinary(), unique=False, nullable=True)
 
     def __repr__(self):
         return '<User %r>' % self.username
