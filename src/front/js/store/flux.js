@@ -1,11 +1,14 @@
 // import { getCacheDir } from "gh-pages";
+import { get } from "react-hook-form";
 import { Navigate } from "react-router-dom";
 
 const registerURL = process.env.BACKEND_URL + "/api/register";
 const loginURL = process.env.BACKEND_URL + "/api/token";
 const postPostURL = process.env.BACKEND_URL + "/api/post";
 const getAllPostsURL = process.env.BACKEND_URL + "/api/posts";
-const emailAPI_accessKey = "BQrnUUYUa37fqdqYL2xij6WIjrhrXY2S";
+const createBookmarkURL = process.env.BACKEND_URL + "/api/bookmark";
+const getBookmarksURL = process.env.BACKEND_URL + "/api/bookmark/";
+const getPostByID = process.env.BACKEND_URL + "/post/";
 
 const getState = ({ getStore, getActions, setStore }) => {
   return {
@@ -13,6 +16,7 @@ const getState = ({ getStore, getActions, setStore }) => {
       registered: false,
       user: null,
       token: null,
+      bookmarks: null,
     },
     actions: {
       // Use getActions to call a function within a fuction
@@ -137,15 +141,6 @@ const getState = ({ getStore, getActions, setStore }) => {
         localStorage.removeItem("user");
         setStore({ token: null, user: null });
       },
-      // SYNC LOCAL STORAGE TO STORE ON RELOAD
-      syncFromLocalStore: () => {
-        const token = localStorage.getItem("token");
-        const user = localStorage.getItem("user");
-        if (token && user) {
-          const userData = JSON.parse(user);
-          setStore({ token: token, user: userData });
-        }
-      },
       // CREATE POST
       createPost: async (author_id, content, fieldOfStudy, postType, title) => {
         const accessToken = localStorage.getItem("token");
@@ -194,6 +189,77 @@ const getState = ({ getStore, getActions, setStore }) => {
           return data;
         } catch {
           (error) => console.log(error);
+        }
+      },
+      // CREATE BOOKMARK
+      createBookmark: async (user_id, post_id) => {
+        const accessToken = localStorage.getItem("token");
+        const opts = {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+          body: JSON.stringify({
+            user_id: user_id,
+            post_id: post_id,
+          }),
+        };
+        try {
+          const resp = await fetch(createBookmarkURL, opts);
+          if (resp.status !== 201) {
+            console.log("There has been an error in posting a bookmark");
+            return false;
+          }
+          const data = await resp.json();
+          return data;
+        } catch {
+          (error) => console.log(error);
+        }
+      },
+      // GET ALL BOOKMARKS BY USER
+      getBookmarks: async (user_id) => {
+        const accessToken = localStorage.getItem("token");
+        const opts = {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+        };
+        try {
+          const resp = await fetch(getBookmarksURL + user_id, opts);
+          if (resp.status !== 200) {
+            console.log("There has been an error in fetching bookmarks.");
+            return false;
+          }
+          const data = await resp.json();
+          let post_ids = [];
+          for (let elem of data) {
+            post_ids.push(elem.post_id);
+          }
+          const allPosts = await getActions().getAllPosts();
+          const posts = [];
+          for (let post of allPosts) {
+            for (let id of post_ids) {
+              if (post.id == id) {
+                posts.push(post);
+              }
+            }
+          }
+          setStore({ bookmarks: posts });
+          return posts;
+        } catch {
+          (error) => console.log(error);
+        }
+      },
+      // SYNC LOCAL STORAGE TO STORE ON RELOAD
+      syncFromLocalStore: () => {
+        const token = localStorage.getItem("token");
+        const user = localStorage.getItem("user");
+        if (token && user) {
+          const userData = JSON.parse(user);
+          setStore({ token: token, user: userData });
         }
       },
     },

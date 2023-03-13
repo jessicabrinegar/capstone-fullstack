@@ -203,6 +203,7 @@ def get_all_posts():
 
 # get all posts by specific user
 @api.route('/user/<int:user_id>/posts', methods=['GET'])
+@jwt_required()
 def get_user_posts(user_id):
     user = User.query.get(user_id)
     if user is None:
@@ -286,6 +287,7 @@ def create_bookmark():
 
 # get bookmarks by user id
 @api.route('/bookmark/<int:user_id>', methods=['GET'])
+@jwt_required()
 def get_bookmark(user_id):
     user = User.query.get(user_id)
     if not user:
@@ -296,6 +298,7 @@ def get_bookmark(user_id):
 
 # get all bookmarks
 @api.route('/all-bookmarks', methods=['GET'])
+@jwt_required()
 def get_all_bookmarks():
     bookmarks = Bookmark.query.all()
     bookmark_list = [bookmark.serialize() for bookmark in bookmarks]
@@ -303,6 +306,7 @@ def get_all_bookmarks():
 
 # delete a bookmark
 @api.route('/bookmark/<int:bookmark_id>', methods=['DELETE'])
+@jwt_required()
 def delete_bookmark(bookmark_id):
     bookmark = Bookmark.query.get(bookmark_id)
     if not bookmark:

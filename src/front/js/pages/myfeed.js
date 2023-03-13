@@ -6,12 +6,10 @@ import { Post } from "../component/post.js";
 export const MyFeed = () => {
   const { store, actions } = useContext(Context);
   const [posts, setPosts] = useState([]);
-  // const [postID, setPostID] = useState(0);
 
   const getAllPosts = () => {
     actions.getAllPosts().then((resp) => {
       setPosts(resp);
-      console.log(resp);
     });
   };
 
@@ -35,6 +33,7 @@ export const MyFeed = () => {
         {posts.map((post) => (
           <Post
             key={post.id}
+            post_id={post.id}
             author_id={post.author_id}
             content={post.content}
             fos={post.field_of_study}
