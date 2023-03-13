@@ -214,7 +214,6 @@ def get_user_posts(user_id):
 
 # post a follow_map
 @api.route('/follow', methods=['POST'])
-@jwt_required()
 def create_follow_map():
     rb = request.get_json()
     user_follower = User.query.get(rb["follower_id"])
@@ -239,7 +238,7 @@ def get_follow_map(follow_map_id):
     return jsonify(follow_map.serialize()), 200
 
 # delete a follow_map
-@api.route('/follow-map/<int:follow_map_id>', methods=['DELETE'])
+@api.route('/follow/<int:follow_map_id>', methods=['DELETE'])
 def delete_follow_map(follow_map_id):
     follow_map = Follow_Map.query.get_or_404(follow_map_id)
     db.session.delete(follow_map)
@@ -255,7 +254,7 @@ def get_follow_map_by_follower_id(follower_id):
     return jsonify(follow_map.serialize()), 200
 
 # get a follow_map by the target_user_id
-@api.route('/follow_map/<int:target_user_id>', methods=['GET'])
+@api.route('/follow_map/target/<int:target_user_id>', methods=['GET'])
 def get_follow_map_by_target_id(target_user_id):
     follow_map = Follow_Map.query.filter_by(target_user_id=target_user_id).all()
     if not follow_map:

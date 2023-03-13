@@ -24,26 +24,24 @@ const Layout = () => {
   const token = localStorage.getItem("token");
 
   return (
-    <div>
-      <BrowserRouter basename={basename}>
-        <ScrollToTop>
-          <Navbar />
-          <Routes>
-            <Route path="/" element={<Landing />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/myfeed" element={<MyFeed />} />
-            <Route path="/collaborations" element={<Collabs />} />
-            <Route path="/createpost" element={<CreateNewPost />} />
-            <Route path="/bookmarks" element={<Bookmarks />} />
-            <Route path="/profile/:user" element={<UserProfile />} />
-            <Route path="verified" element={<Verified />} />
-            {/* <Route path="*" element={<Error />} /> */}
-          </Routes>
-          <Footer />
-        </ScrollToTop>
-      </BrowserRouter>
-    </div>
+    <BrowserRouter basename={basename}>
+      <ScrollToTop>
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<Landing />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/myfeed" element={<MyFeed />} />
+          <Route path="/collaborations" element={<Collabs />} />
+          <Route path="/createpost" element={<CreateNewPost />} />
+          <Route path="/bookmarks" element={<Bookmarks />} />
+          <Route path="/profile/:user" element={<UserProfile />} />
+          <Route path="verified" element={<Verified />} />
+          {/* <Route path="*" element={<Error />} /> */}
+        </Routes>
+        <Footer />
+      </ScrollToTop>
+    </BrowserRouter>
   );
 };
 

@@ -4,15 +4,15 @@ import "../../styles/home.css";
 
 export const Landing = () => {
   return (
-    <div className="text-center w-100 mb-5">
+    <div className="text-center w-100 mb-5 mx-0">
       <div className="col">Null Not Nothing</div>
       <p>
-        Here will be the overarching mission statement of the website... Place a
-        mission statement here...{" "}
+        Stay up-to-date with the null results that are driving science forward.
+        Sign up for free
       </p>
-      <div className="row">
+      <div className="row mt-5">
         <div className="col">
-          <img src="https://via.placeholder.com/200" />
+          <img src="https://via.placeholder.com/500x400" />
         </div>
         <div className="col d-flex align-items-center">
           <p>
@@ -21,7 +21,7 @@ export const Landing = () => {
           </p>
         </div>
       </div>
-      <div className="row">
+      <div className="row mt-5">
         <div className="col d-flex align-items-center">
           <p>
             A statement about the importance of replication.. we should be
@@ -29,12 +29,12 @@ export const Landing = () => {
           </p>
         </div>
         <div className="col">
-          <img src="https://via.placeholder.com/200" />
+          <img src="https://via.placeholder.com/500x400" />
         </div>
       </div>
-      <div className="row">
+      <div className="row mt-5">
         <div className="col">
-          <img src="https://via.placeholder.com/200" />
+          <img src="https://via.placeholder.com/500x400" />
         </div>
         <div className="col d-flex align-items-center">
           <p>
