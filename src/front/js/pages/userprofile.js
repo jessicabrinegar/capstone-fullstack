@@ -25,10 +25,17 @@ export const UserProfile = () => {
     }
   }, [user]);
 
+  const styles = {
+    profileImage: {
+      height: "10rem",
+      borderRadius: "50%",
+    },
+  };
+
   if (!user) return null;
   return (
     <div>
-      <UserPicture userID={user.id} />
+      <UserPicture userID={user.id} imageStyles={styles.profileImage} />
       <div>{user.firstname + " " + user.lastname}</div>
       <div>{user.username}</div>
       <div>{user.university}</div>

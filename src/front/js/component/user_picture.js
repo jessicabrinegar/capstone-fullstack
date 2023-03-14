@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-export const UserPicture = ({ userID }) => {
+export const UserPicture = ({ userID, imageStyles }) => {
   const [profilePicture, setProfilePicture] = useState(null);
 
   useEffect(() => {
@@ -22,17 +22,10 @@ export const UserPicture = ({ userID }) => {
   }, [userID]);
   if (!profilePicture) return null;
 
-  const styles = {
-    image: {
-      height: "10rem",
-      borderRadius: "50%",
-    },
-  };
-
   return (
     <div>
       {profilePicture && (
-        <img src={profilePicture} alt="Profile Picture" style={styles.image} />
+        <img src={profilePicture} alt="Profile Picture" style={imageStyles} />
       )}
     </div>
   );
