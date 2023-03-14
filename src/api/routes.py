@@ -1,7 +1,7 @@
 """
 This module takes care of starting the API Server, Loading the DB and Adding the endpoints
 """
-from flask import Flask, request, jsonify, url_for, Blueprint
+from flask import Flask, request, jsonify, url_for, Blueprint, make_response
 from api.models import db, User, Post, Bookmark, Follow_Map, FieldOfStudy, Flag
 from api.utils import generate_sitemap, APIException
 from flask_jwt_extended import create_access_token
@@ -17,6 +17,7 @@ ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 UPLOAD_FOLDER = '/workspace/capstone-fullstack/src/api/uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
+# POST a file for the profile picture
 def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -34,6 +35,17 @@ def upload_file(user_id):
         return jsonify({'message': 'File uploaded successfully.'}), 200
     else:
         return jsonify({'error': 'Invalid file type.'}), 400
+
+# GET the profile picture of a specific user
+@api.route('/user/<int:user_id>/profile_picture', methods=['GET'])
+def get_profile_picture(user_id):
+    user = User.query.get(user_id)
+    if user and user.profile_picture:
+        response = make_response(user.profile_picture)
+        response.headers.set('Content-Type', 'image/jpeg')
+        return response
+    else:
+        return jsonify({'error': 'Profile picture not found.'}), 404
 
 #   *** hashing password ***
 

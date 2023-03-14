@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState, useMemo } from "react";
 import { Context } from "../store/appContext";
-import { Link, Outlet } from "react-router-dom";
 import { Post } from "../component/post.js";
+import { UserPicture } from "../component/user_picture.js";
 
 export const UserProfile = () => {
   const { store, actions } = useContext(Context);
@@ -28,6 +28,7 @@ export const UserProfile = () => {
   if (!user) return null;
   return (
     <div>
+      <UserPicture userID={user.id} />
       <div>{user.firstname + " " + user.lastname}</div>
       <div>{user.username}</div>
       <div>{user.university}</div>
