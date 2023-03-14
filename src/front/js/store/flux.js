@@ -90,15 +90,40 @@ const getState = ({ getStore, getActions, setStore }) => {
         };
         try {
           const resp = await fetch(
-            process.env.BACKEND_URL + `/user/${username}`,
+            process.env.BACKEND_URL + `/api/user/${username}`,
             opts
           );
           if (resp.status !== 200) {
-            alert("There has been an error.");
+            alert("There has been an error in fetching user by username.");
             return false;
           }
           const data = await resp.json();
           console.log("User data from the backend: ", data);
+          return data;
+        } catch {
+          (error) => console.log(error);
+        }
+      },
+      // GET A USER BY ID
+      getUserByID: async (user_id) => {
+        const accessToken = localStorage.getItem("token");
+        const opts = {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+        };
+        try {
+          const resp = await fetch(
+            process.env.BACKEND_URL + `/api/user/${user_id}`,
+            opts
+          );
+          if (resp.status !== 200) {
+            alert("There has been an error in fetching user by ID.");
+            return false;
+          }
+          const data = await resp.json();
           return data;
         } catch {
           (error) => console.log(error);

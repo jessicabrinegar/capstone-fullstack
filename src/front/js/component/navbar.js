@@ -2,6 +2,7 @@ import React, { useContext, useState, useEffect } from "react";
 import { Link, Outlet } from "react-router-dom";
 import { Context } from "../store/appContext";
 import { useNavigate } from "react-router-dom";
+import NoTextLogo from "../../img/logo-no-text.png";
 
 export const Navbar = () => {
   const { store, actions } = useContext(Context);
@@ -55,7 +56,9 @@ export const Navbar = () => {
     <nav className="navbar navbar-light bg-light">
       <div className="container">
         <Link to="/">
-          <span className="navbar-brand mb-0 h1">N3</span>
+          <span className="navbar-brand mb-0">
+            <img src={NoTextLogo} style={{ width: "2rem" }} />
+          </span>
         </Link>
         <div className="ml-auto">
           <Link to="/login">

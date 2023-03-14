@@ -1,11 +1,13 @@
 import React from "react";
-import rigoImageUrl from "../../img/rigo-baby.jpg";
+import Logo from "../../img/n3logo.png";
 import "../../styles/home.css";
 
 export const Landing = () => {
   return (
     <div className="text-center w-100 mb-5 mx-0">
-      <div className="col">Null Not Nothing</div>
+      <div className="col">
+        <img src={Logo} />
+      </div>
       <p>
         Stay up-to-date with the null results that are driving science forward.
         Sign up for free

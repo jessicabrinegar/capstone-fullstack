@@ -119,16 +119,25 @@ def delete_user(id):
     return jsonify({'message': f'User {user.id} was deleted'}), 201
 
 
-#get a user
+#get a user by username
 @api.route('/user/<username>', methods=['GET'])
 @jwt_required()
-def get_user(username):
+def get_user_by_username(username):
     user = db.session.query(User).filter(User.username == username).first()
     if user is None:
         raise APIException("User not found", 404)
     else:
         return jsonify(user.serialize()), 200
 
+# get a user by ID
+@api.route('/user/<int:id>', methods=['GET'])
+@jwt_required()
+def get_user_by_id(id):
+    user = User.query.get(id)
+    if user is None:
+        raise APIException("User not found", 404)
+    else:
+        return jsonify(user.serialize()), 200
 
 # get all users
 @api.route('/users', methods=['GET'])

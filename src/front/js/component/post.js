@@ -4,8 +4,9 @@ import { BookmarkIcon } from "./bookmark_icon";
 import { UserPicture } from "./user_picture";
 import UniversityIcon from "../../img/icons8-university-30.png";
 
-export const Post = ({ post_id, fos, type, title, content }) => {
+export const Post = ({ author_id, post_id, fos, type, title, content }) => {
   const { store, actions } = useContext(Context);
+  const [userData, setUserData] = useState({});
 
   const user = useMemo(() => {
     if (!store) return null;
@@ -19,9 +20,19 @@ export const Post = ({ post_id, fos, type, title, content }) => {
     });
   };
 
+  const handleGetUserData = () => {
+    actions.getUserByID(author_id).then((resp) => {
+      setUserData(resp);
+    });
+  };
+
+  useEffect(() => {
+    handleGetUserData();
+  }, []);
+
   const styles = {
     profileImage: {
-      height: "4rem",
+      height: "3.5rem",
       borderRadius: "50%",
     },
     button: {
@@ -30,16 +41,18 @@ export const Post = ({ post_id, fos, type, title, content }) => {
     },
   };
 
-  if (!user) return null;
+  if (!user && userData.length == 0) return null;
   return (
     <div className="card w-75" style={{ width: 1 + "rem" }}>
       <div className="card-body">
         <div className="d-flex justify-content-between">
           <div className="d-flex">
-            <UserPicture userID={user.id} imageStyles={styles.profileImage} />
-            <div className="ms-2 text-center">
-              <div>{user.firstname + " " + user.lastname}</div>
-              <div>{user.username}</div>
+            <UserPicture userID={author_id} imageStyles={styles.profileImage} />
+            <div className="ms-2 text-center pt-1">
+              <span className="mb-0">
+                {userData.firstname + " " + userData.lastname}
+              </span>
+              <span className="d-block">{userData.username}</span>
             </div>
           </div>
           <button
@@ -52,7 +65,7 @@ export const Post = ({ post_id, fos, type, title, content }) => {
         </div>
         <div className="d-flex">
           <img src={UniversityIcon} />
-          <div className="ms-2">{user.university}</div>
+          <div className="ms-2">{userData.university}</div>
         </div>
         <h5 className="card-title">{title}</h5>
         <h6 className="card-subtitle mb-2 text-muted">{type}</h6>

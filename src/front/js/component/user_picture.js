@@ -17,6 +17,7 @@ export const UserPicture = ({ userID, imageStyles }) => {
         setProfilePicture(imageUrl);
       })
       .catch((error) => {
+        setProfilePicture("https://via.placeholder.com/85x100");
         console.error(error);
       });
   }, [userID]);
