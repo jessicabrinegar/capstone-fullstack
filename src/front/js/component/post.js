@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useState, useMemo } from "react";
 import { Context } from "../store/appContext";
 import { BookmarkIcon } from "./bookmark_icon";
 import { UserPicture } from "./user_picture";
-// import { UniversityIcon } from "./uni_icon";
 import UniversityIcon from "../../img/icons8-university-30.png";
 
 export const Post = ({ post_id, fos, type, title, content }) => {

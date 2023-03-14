@@ -2,6 +2,10 @@ import React, { useContext, useEffect, useState, useMemo } from "react";
 import { Context } from "../store/appContext";
 import { Post } from "../component/post.js";
 import { UserPicture } from "../component/user_picture.js";
+import { UserIcon } from "../component/user_icon.js";
+import UniversityIcon from "../../img/icons8-university-30.png";
+import { BookIcon } from "../component/book_icon.js";
+import { StudentIcon } from "../component/student_icon.js";
 
 export const UserProfile = () => {
   const { store, actions } = useContext(Context);
@@ -36,11 +40,26 @@ export const UserProfile = () => {
   return (
     <div>
       <UserPicture userID={user.id} imageStyles={styles.profileImage} />
-      <div>{user.firstname + " " + user.lastname}</div>
-      <div>{user.username}</div>
-      <div>{user.university}</div>
-      <div>{user.field_of_study}</div>
-      <div>{user.user_type}</div>
+      <div className="d-flex">
+        {/* <img src={StudyIcon} /> */}
+        <p>{user.firstname + " " + user.lastname}</p>
+      </div>
+      <div className="d-flex">
+        <UserIcon />
+        <p>{user.username}</p>
+      </div>
+      <div className="d-flex">
+        <img src={UniversityIcon} />
+        <p>{user.university}</p>
+      </div>
+      <div className="d-flex">
+        <BookIcon />
+        <p>{user.field_of_study}</p>
+      </div>
+      <div className="d-flex">
+        <StudentIcon />
+        <p>{user.user_type}</p>
+      </div>
       <div>
         {posts.map((post) => (
           <Post
